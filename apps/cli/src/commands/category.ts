@@ -1,4 +1,5 @@
 import type { Command } from 'commander'
+import { stringifyJson } from '../lib/json'
 import { createSubcategory, deleteCategory, getCategories, renameCategory } from '@balance/core'
 import { getAuthedClient } from '../lib/client'
 import { fail } from '../lib/exit'
@@ -31,7 +32,7 @@ function registerList(group: Command): void {
       const categories = await getCategories(client, { entity: opts.entity as Entity | undefined })
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(categories ?? []) + '\n')
+        process.stdout.write(stringifyJson(categories ?? []) + '\n')
         return
       }
 
@@ -68,7 +69,7 @@ function registerCreate(group: Command): void {
       const result = await createSubcategory(client, { parentId, id, name })
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(result) + '\n')
+        process.stdout.write(stringifyJson(result) + '\n')
       } else {
         process.stdout.write(`Created category ${id} ("${name}") under ${parentId}\n`)
       }
@@ -89,7 +90,7 @@ function registerRename(group: Command): void {
       const result = await renameCategory(client, id, newName)
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(result) + '\n')
+        process.stdout.write(stringifyJson(result) + '\n')
       } else {
         process.stdout.write(`Renamed ${id} → "${newName}"\n`)
       }
@@ -110,7 +111,7 @@ function registerDelete(group: Command): void {
       const result = await deleteCategory(client, id)
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(result) + '\n')
+        process.stdout.write(stringifyJson(result) + '\n')
       } else {
         process.stdout.write(`Deleted category ${id}\n`)
       }

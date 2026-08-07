@@ -1,4 +1,5 @@
 import type { Command } from 'commander'
+import { stringifyJson } from '../lib/json'
 import {
   createCategorizationRule,
   deleteCategorizationRule,
@@ -30,7 +31,7 @@ export function registerRulesCommand(program: Command): void {
       const client = await getAuthedClient()
       const data = await getCategorizationRules(client)
       if (opts.json) {
-        process.stdout.write(JSON.stringify(data) + '\n')
+        process.stdout.write(stringifyJson(data) + '\n')
         return
       }
       process.stdout.write(renderRules(data))

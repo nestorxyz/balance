@@ -1,5 +1,13 @@
 # Balance App — Arquitectura
 
+## Representacion de dinero
+
+Core, CLI, web, RPCs y columnas monetarias PostgreSQL `bigint` usan unidades
+menores enteras (centesimas), tambien para CLP. Tasas, porcentajes, cuotas de
+fondos y tipos de cambio siguen siendo tasas. La entrada se convierte desde texto
+decimal sin coma flotante; los calculos monetarios redondean half-up y las salidas
+JSON/CSV usan strings decimales exactos con dos posiciones.
+
 ---
 
 ## Decision: Vite sobre Next.js

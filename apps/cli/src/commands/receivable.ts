@@ -1,4 +1,5 @@
 import type { Command } from 'commander'
+import { stringifyJson } from '../lib/json'
 import { receivePayment } from '@balance/core'
 import { getAuthedClient } from '../lib/client'
 import { fail } from '../lib/exit'
@@ -45,7 +46,7 @@ function registerPay(group: Command): void {
       })
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(result) + '\n')
+        process.stdout.write(stringifyJson(result) + '\n')
       } else {
         process.stdout.write(
           `Received ${formatCLP(amount)} from "${receivableRef}" into "${opts.to}"\n`,

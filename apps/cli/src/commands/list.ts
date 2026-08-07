@@ -1,4 +1,5 @@
 import type { Command } from 'commander'
+import { stringifyJson } from '../lib/json'
 import { getAuthedClient } from '../lib/client'
 import { fail } from '../lib/exit'
 import { formatCLP, padLeft, padRight } from '../lib/format'
@@ -139,7 +140,7 @@ export function registerListCommand(program: Command): void {
       const rows = data ?? []
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(rows) + '\n')
+        process.stdout.write(stringifyJson(rows) + '\n')
         return
       }
 

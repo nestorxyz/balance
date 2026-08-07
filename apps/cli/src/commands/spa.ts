@@ -1,4 +1,5 @@
 import type { Command } from 'commander'
+import { stringifyJson } from '../lib/json'
 import {
   createInterEntityTransfer,
   createSpaInvoiceV2,
@@ -78,7 +79,7 @@ function registerDashboard(group: Command): void {
       const data = await getSpaDashboard(client)
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(data) + '\n')
+        process.stdout.write(stringifyJson(data) + '\n')
         return
       }
 
@@ -128,7 +129,7 @@ function registerInvoiceList(invoiceGroup: Command): void {
           : await getSpaRecibidas(client, opts.month)
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(rows) + '\n')
+        process.stdout.write(stringifyJson(rows) + '\n')
         return
       }
 
@@ -225,7 +226,7 @@ function registerInvoiceCreate(invoiceGroup: Command): void {
       })
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(result) + '\n')
+        process.stdout.write(stringifyJson(result) + '\n')
       } else {
         process.stdout.write(`Created ${opts.direction} invoice for ${opts.counterpart}: ${formatCLP(neto)}\n`)
       }
@@ -250,7 +251,7 @@ function registerInvoicePay(invoiceGroup: Command): void {
       const result = await markSpaInvoicePaid(client, invoiceId, accountId)
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(result) + '\n')
+        process.stdout.write(stringifyJson(result) + '\n')
       } else {
         process.stdout.write(`Marked invoice ${invoiceId} as paid\n`)
       }
@@ -286,10 +287,10 @@ function registerF29(group: Command): void {
       const data = await getF29Summary(client, year, month)
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(data) + '\n')
+        process.stdout.write(stringifyJson(data) + '\n')
         return
       }
-      process.stdout.write(JSON.stringify(data, null, 2) + '\n')
+      process.stdout.write(stringifyJson(data, null, 2) + '\n')
     })
 }
 
@@ -310,10 +311,10 @@ function registerAnnual(group: Command): void {
       const data = await getSpaAnnualSummary(client, year)
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(data) + '\n')
+        process.stdout.write(stringifyJson(data) + '\n')
         return
       }
-      process.stdout.write(JSON.stringify(data, null, 2) + '\n')
+      process.stdout.write(stringifyJson(data, null, 2) + '\n')
     })
 }
 
@@ -362,7 +363,7 @@ function registerGasto(group: Command): void {
         date: opts.date,
       })
       if (opts.json) {
-        process.stdout.write(JSON.stringify(tx) + '\n')
+        process.stdout.write(stringifyJson(tx) + '\n')
       } else {
         process.stdout.write(`SpA expense ${formatCLP(amountClp)} in ${category}\n`)
       }
@@ -414,7 +415,7 @@ function registerF29Declarar(group: Command): void {
         officialCodes,
       })
       if (opts.json) {
-        process.stdout.write(JSON.stringify(result) + '\n')
+        process.stdout.write(stringifyJson(result) + '\n')
       } else {
         process.stdout.write(`F29 ${monthArg} declared${officialCodes ? ' (official codes)' : ' (app estimate)'}\n`)
       }
@@ -456,7 +457,7 @@ function registerSueldo(group: Command): void {
         date: opts.date,
       })
       if (opts.json) {
-        process.stdout.write(JSON.stringify(result) + '\n')
+        process.stdout.write(stringifyJson(result) + '\n')
       } else {
         process.stdout.write(`Sueldo ${formatCLP(amount)} SpA → personal\n`)
       }

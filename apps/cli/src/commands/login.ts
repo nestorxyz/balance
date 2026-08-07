@@ -1,4 +1,5 @@
 import type { Command } from 'commander'
+import { stringifyJson } from '../lib/json'
 import { getSupabaseUrl } from '../lib/config'
 import { fail } from '../lib/exit'
 import { saveSession, type Session } from '../lib/session'
@@ -37,7 +38,7 @@ export function registerLoginCommand(program: Command): void {
       await saveSession(session)
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify({ ok: true, expires_at: session.expires_at }) + '\n')
+        process.stdout.write(stringifyJson({ ok: true, expires_at: session.expires_at }) + '\n')
       } else {
         const expires = new Date(session.expires_at).toISOString()
         const tick = ui.positive('✓')

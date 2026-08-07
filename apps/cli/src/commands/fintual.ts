@@ -1,4 +1,5 @@
 import type { Command } from 'commander'
+import { stringifyJson } from '../lib/json'
 import { getAccounts } from '@balance/core'
 import { getAuthedClient } from '../lib/client'
 import { formatCLP, padLeft, padRight } from '../lib/format'
@@ -85,7 +86,7 @@ function registerSync(group: Command): void {
 
       if (fintual.length === 0) {
         if (opts.json) {
-          process.stdout.write(JSON.stringify({ updated: [] }) + '\n')
+          process.stdout.write(stringifyJson({ updated: [] }) + '\n')
         } else {
           process.stdout.write('(no Fintual-linked accounts found)\n')
         }
@@ -116,10 +117,10 @@ function registerSync(group: Command): void {
           })
           continue
         }
-        const newBalance = Math.round(acc.shares * day.price)
+        const newBalance = Math.floor(acc.shares * day.price * 100 + 0.5)
         const delta = newBalance - acc.currentBalance
         let updated = false
-        if (!opts.dryRun && Math.abs(delta) > 100) {
+        if (!opts.dryRun && Math.abs(delta) > 10_000) {
           const { error } = await client
             .from('accounts')
             .update({ balance: newBalance, updated_at: new Date().toISOString() })
@@ -141,7 +142,7 @@ function registerSync(group: Command): void {
       }
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify({ dryRun: !!opts.dryRun, results }) + '\n')
+        process.stdout.write(stringifyJson({ dryRun: !!opts.dryRun, results }) + '\n')
         return
       }
 

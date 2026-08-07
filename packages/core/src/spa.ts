@@ -1,4 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { roundMoney } from './money'
 import type { SupabaseClient as UntypedClient } from '@supabase/supabase-js'
 import type { Database } from './types'
 
@@ -122,7 +123,7 @@ export async function createSpaInvoice(supabase: TypedClient, input: {
   description: string
   date?: string
 }) {
-  const iva = Math.round(input.netAmount * 0.19)
+  const iva = roundMoney(input.netAmount * 0.19)
   const total = input.netAmount + iva
 
   const { data, error } = await supabase.rpc('create_transaction', {

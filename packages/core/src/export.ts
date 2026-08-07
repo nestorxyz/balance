@@ -1,5 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from './types'
+import { moneyToDecimal } from './money'
 
 type TypedClient = SupabaseClient<Database>
 
@@ -52,6 +53,34 @@ export async function exportAllData(client: TypedClient): Promise<ExportData> {
   }
 }
 
+const MONEY_FIELDS = new Set([
+  'amount', 'balance', 'credit_limit', 'total_amount', 'installment_amount',
+  'last_installment_amount', 'remaining_amount', 'statement_balance',
+  'net_worth', 'position', 'accumulated', 'delta', 'net', 'neto', 'iva',
+  'paid_amount', 'f29_total', 'monthly_income', 'monthly_expenses',
+  'monthly_profit', 'iva_debito', 'iva_credito', 'iva_neto', 'ppm',
+  'remanente_anterior', 'remanente_siguiente',
+])
+
+/** Recursively serialize known monetary fields as exact two-place decimals. */
+export function serializeMoneyFields(value: unknown, field?: string): unknown {
+  if (typeof value === 'number' && field && MONEY_FIELDS.has(field)) return moneyToDecimal(value)
+  if (Array.isArray(value)) return value.map((item) => serializeMoneyFields(item))
+  if (value && typeof value === 'object') {
+    const record = value as Record<string, unknown>
+    return Object.fromEntries(Object.entries(record).map(([key, item]) => {
+      // `total` is also commonly a count. It is money only in invoice/amount rows.
+      const moneyField = key === 'total' && ('net' in record || 'neto' in record || 'iva' in record || 'amount' in record)
+      return [key, serializeMoneyFields(item, moneyField ? 'amount' : key)]
+    }))
+  }
+  return value
+}
+
+export function stringifyMoneyJson(value: unknown, space?: number): string {
+  return JSON.stringify(serializeMoneyFields(value), null, space)
+}
+
 export function exportTableAsCsv(data: Record<string, unknown>[], _tableName: string): string {
   if (data.length === 0) return ''
 
@@ -61,7 +90,7 @@ export function exportTableAsCsv(data: Record<string, unknown>[], _tableName: st
   const headers = Object.keys(firstRow)
   const rows = data.map((row) =>
     headers.map((h) => {
-      const val = row[h]
+      const val = serializeMoneyFields(row[h], h)
       if (val === null || val === undefined) return ''
       const str = String(val)
       if (str.includes(',') || str.includes('"') || str.includes('\n')) {

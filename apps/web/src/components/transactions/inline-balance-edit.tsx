@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
-import { formatMoney } from '@/lib/format'
+import { formatMoney, parseMoney } from '@/lib/format'
 import { useUpdateBalance } from '@/hooks/use-update-balance'
 
 interface InlineBalanceEditProps {
@@ -11,10 +11,8 @@ interface InlineBalanceEditProps {
 }
 
 function parseIntegerAmount(raw: string): number | null {
-  const cleaned = raw.replace(/[.\s]/g, '').replace(/,/g, '')
-  const n = Number(cleaned)
-  if (Number.isNaN(n)) return null
-  return Math.round(n)
+  if (/^[+-]?0(?:[.,]0{1,2})?$/.test(raw.trim())) return 0
+  try { return parseMoney(raw, { allowNegative: true }) } catch { return null }
 }
 
 export function InlineBalanceEdit({ value, accountId, accountName, className }: InlineBalanceEditProps) {
@@ -70,7 +68,7 @@ export function InlineBalanceEdit({ value, accountId, accountName, className }: 
       <input
         ref={inputRef}
         type="text"
-        inputMode="numeric"
+        inputMode="decimal"
         value={editValue}
         onChange={(e) => setEditValue(e.target.value)}
         onKeyDown={handleKeyDown}

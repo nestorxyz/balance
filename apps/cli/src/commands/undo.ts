@@ -1,4 +1,5 @@
 import type { Command } from 'commander'
+import { stringifyJson } from '../lib/json'
 import { undoTransaction } from '@balance/core'
 import { getAuthedClient } from '../lib/client'
 import { fail } from '../lib/exit'
@@ -20,7 +21,7 @@ export function registerUndoCommand(program: Command): void {
       const result = await undoTransaction(client, txId)
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(result) + '\n')
+        process.stdout.write(stringifyJson(result) + '\n')
       } else {
         process.stdout.write(`Undone ${txId}\n`)
       }

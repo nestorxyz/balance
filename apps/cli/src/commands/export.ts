@@ -1,6 +1,6 @@
 import { writeFileSync } from 'node:fs'
 import type { Command } from 'commander'
-import { exportAllData, exportTableAsCsv } from '@balance/core'
+import { exportAllData, exportTableAsCsv, stringifyMoneyJson } from '@balance/core'
 import { getAuthedClient } from '../lib/client'
 import { fail } from '../lib/exit'
 
@@ -32,7 +32,7 @@ export function registerExportCommand(program: Command): void {
 
       let output: string
       if (opts.format === 'json') {
-        output = JSON.stringify(data, null, 2)
+        output = stringifyMoneyJson(data, 2)
       } else {
         const sections: string[] = []
         for (const [table, rows] of Object.entries(data.tables)) {

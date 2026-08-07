@@ -8,6 +8,7 @@ import { InlineBalanceEdit } from '@/components/transactions/inline-balance-edit
 import { Button } from '@/components/ui/button'
 import { supabase } from '@/lib/supabase'
 import { toast } from 'sonner'
+import { parseMoney } from '@/lib/format'
 
 interface BucketAccount {
   id: string
@@ -156,7 +157,7 @@ function InlineAddAccount({
         name,
         type,
         subtype: subtype as 'debit' | 'cash' | 'credit_card' | 'receivable' | 'payable' | 'investment' | 'property',
-        balance: balance ? parseInt(balance, 10) : 0,
+        balance: balance ? parseMoney(balance, { allowNegative: true }) : 0,
         onBudget: subtype !== 'investment' && subtype !== 'property',
       }),
     onSuccess: () => {
@@ -189,7 +190,8 @@ function InlineAddAccount({
         value={balance}
         onChange={(e) => setBalance(e.target.value)}
         placeholder="$0"
-        type="number"
+        type="text"
+        inputMode="decimal"
         className="w-20 bg-transparent text-right font-mono text-sm outline-none placeholder:text-muted-foreground"
       />
       <Button size="sm" type="submit" disabled={mut.isPending || !name.trim()} className="h-6 px-2 text-xs">

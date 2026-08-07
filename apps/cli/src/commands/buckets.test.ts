@@ -3,12 +3,12 @@ import { isMonth, renderBuckets } from './buckets'
 import type { MonthlyBuckets } from '@balance/core'
 
 const SAMPLE: MonthlyBuckets = {
-  income: 980000,
-  necesidades: 310000,
-  consumo: 70000,
-  ahorro: 480000,
-  por_categorizar: 40000,
-  disponible: 560000,
+  income: 98000000,
+  necesidades: 31000000,
+  consumo: 7000000,
+  ahorro: 48000000,
+  por_categorizar: 4000000,
+  disponible: 56000000,
   month: '2026-03',
 }
 
@@ -41,7 +41,7 @@ describe('renderBuckets', () => {
   })
 
   it('renders negative disponible with minus sign', () => {
-    const out = renderBuckets({ ...SAMPLE, disponible: -123456 }, 'personal')
+    const out = renderBuckets({ ...SAMPLE, disponible: -12345600 }, 'personal')
     // es-CL currency puts the sign after the symbol: $-123.456
     expect(out).toMatch(/Disponible.*\$-123\.456/)
   })

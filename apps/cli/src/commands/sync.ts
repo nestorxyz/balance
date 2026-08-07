@@ -1,4 +1,5 @@
 import type { Command } from 'commander'
+import { stringifyJson } from '../lib/json'
 import { triggerGmailSync, type GmailSyncSummary } from '@balance/core'
 import { getAuthedClient } from '../lib/client'
 import { fail } from '../lib/exit'
@@ -39,7 +40,7 @@ export function registerSyncCommand(program: Command): void {
       const client = await getAuthedClient()
       const summary = await triggerGmailSync(client, { since: opts.since })
       if (opts.json) {
-        process.stdout.write(JSON.stringify(summary) + '\n')
+        process.stdout.write(stringifyJson(summary) + '\n')
         return
       }
       process.stdout.write(renderSyncSummary(summary))

@@ -1,4 +1,5 @@
 import type { Command } from 'commander'
+import { stringifyJson } from '../lib/json'
 import { getMonthlyBuckets, type MonthlyBuckets } from '@balance/core'
 import { getAuthedClient } from '../lib/client'
 import { fail } from '../lib/exit'
@@ -62,7 +63,7 @@ export function registerBucketsCommand(program: Command): void {
       })
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(buckets) + '\n')
+        process.stdout.write(stringifyJson(buckets) + '\n')
         return
       }
       process.stdout.write(renderBuckets(buckets, opts.entity))

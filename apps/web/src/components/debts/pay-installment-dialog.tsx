@@ -4,7 +4,7 @@ import { payDebtInstallment, payOffDebt } from '@balance/core'
 import { supabase } from '@/lib/supabase'
 import { toast } from 'sonner'
 import type { Debt } from '@/hooks/use-debts'
-import { formatMoney } from '@/lib/format'
+import { formatMoney, parseMoney } from '@/lib/format'
 import {
   Dialog,
   DialogContent,
@@ -51,7 +51,7 @@ export function PayInstallmentDialog({
 
   const payoffMutation = useMutation({
     mutationFn: () => {
-      const amount = actualAmount ? parseInt(actualAmount, 10) : undefined
+      const amount = actualAmount ? parseMoney(actualAmount) : undefined
       return payOffDebt(supabase, debt.id!, amount)
     },
     onSuccess: () => {
@@ -117,7 +117,8 @@ export function PayInstallmentDialog({
                 <Label htmlFor="actual-amount">Monto real (opcional, si hay descuento)</Label>
                 <Input
                   id="actual-amount"
-                  type="number"
+                  type="text"
+                  inputMode="decimal"
                   min={1}
                   placeholder={String(debt.remaining_amount ?? 0)}
                   value={actualAmount}

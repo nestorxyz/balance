@@ -1,4 +1,5 @@
 import type { Command } from 'commander'
+import { stringifyJson } from '../lib/json'
 import { getAccounts, getSpaAnnualSummary, getSpaExpenses } from '@balance/core'
 import { getAuthedClient } from '../lib/client'
 import { formatCLP } from '../lib/format'
@@ -52,7 +53,7 @@ export function registerPatrimonioCommand(program: Command): void {
       }
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(payload) + '\n')
+        process.stdout.write(stringifyJson(payload) + '\n')
         return
       }
 

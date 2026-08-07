@@ -4,6 +4,10 @@
 
 `bal` is a thin TypeScript CLI that talks to a self-hosted Balance backend (Supabase + PostgreSQL + Edge Functions). It is **read/write**: list accounts, register transactions, manage API keys, and check whether your books are balanced — without leaving the terminal.
 
+Money arguments accept two decimal places in Spanish or English notation (for
+example `1.234,56` or `1,234.56`). Internally and in PostgreSQL, money is integer
+hundredths. JSON and CSV exports emit monetary fields as exact two-place strings.
+
 `@dreamxist/bal-cli` is just the client. To use it, you need a backend — see the [self-hosting guide](https://github.com/dreamxist/balance/blob/main/SETUP.md).
 
 ## Install

@@ -3,7 +3,7 @@ import { formatCLP, padLeft, padRight } from './format'
 
 describe('formatCLP', () => {
   it('formats integer amounts without decimals', () => {
-    const out = formatCLP(8000)
+    const out = formatCLP(800000)
     expect(out).toMatch(/8[.\s ]000/)
     expect(out).toContain('$')
   })
@@ -15,9 +15,13 @@ describe('formatCLP', () => {
   })
 
   it('formats negative amounts', () => {
-    const out = formatCLP(-1500)
+    const out = formatCLP(-150000)
     expect(out).toMatch(/1[.\s ]500/)
     expect(out).toMatch(/[-−]/)
+  })
+
+  it('shows fractional minor units', () => {
+    expect(formatCLP(123450)).toMatch(/1[.\s ]234,50/)
   })
 })
 

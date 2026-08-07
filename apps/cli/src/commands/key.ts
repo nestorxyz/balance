@@ -1,4 +1,5 @@
 import type { Command } from 'commander'
+import { stringifyJson } from '../lib/json'
 import { createSupabaseClient, generateApiKey, hashApiKey, signIn } from '@balance/core'
 import { fail } from '../lib/exit'
 import { padRight } from '../lib/format'
@@ -55,7 +56,7 @@ function registerCreate(group: Command): void {
       if (error) throw error
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify({ api_key: apiKey, record: data }) + '\n')
+        process.stdout.write(stringifyJson({ api_key: apiKey, record: data }) + '\n')
       } else {
         process.stdout.write(
           [
@@ -106,7 +107,7 @@ function registerList(group: Command): void {
       if (error) throw error
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(data ?? []) + '\n')
+        process.stdout.write(stringifyJson(data ?? []) + '\n')
         return
       }
 
@@ -171,7 +172,7 @@ function registerRevoke(group: Command): void {
       }
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(rows[0]) + '\n')
+        process.stdout.write(stringifyJson(rows[0]) + '\n')
       } else {
         const row = rows[0]!
         process.stdout.write(`Revoked ${row.key_prefix} (${row.name})\n`)

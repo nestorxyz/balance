@@ -29,5 +29,5 @@ export async function getFintualPrice(assetId: number): Promise<FintualDay | nul
 }
 
 export function calculateBalance(shares: number, price: number): number {
-  return Math.round(shares * price)
+  return Math.floor(shares * price * 100 + 0.5)
 }

@@ -1,11 +1,7 @@
-const clpFormatter = new Intl.NumberFormat('es-CL', {
-  style: 'currency',
-  currency: 'CLP',
-  maximumFractionDigits: 0,
-})
+import { formatMoney } from '@balance/core'
 
 export function formatCLP(amount: number): string {
-  return clpFormatter.format(amount)
+  return formatMoney(amount)
 }
 
 export function padRight(text: string, width: number): string {

@@ -1,5 +1,6 @@
 import type { Command } from 'commander'
-import { archiveAccount, createAccount, getAccounts, renameAccount, updateAccountBalance } from '@balance/core'
+import { stringifyJson } from '../lib/json'
+import { archiveAccount, createAccount, getAccounts, parseMoney, renameAccount, updateAccountBalance } from '@balance/core'
 import { getAuthedClient } from '../lib/client'
 import { fail } from '../lib/exit'
 import { formatCLP, padLeft, padRight } from '../lib/format'
@@ -60,7 +61,7 @@ function registerList(group: Command): void {
       }
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(filtered) + '\n')
+        process.stdout.write(stringifyJson(filtered) + '\n')
         return
       }
 
@@ -154,7 +155,7 @@ function registerCreate(group: Command): void {
       })
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(result) + '\n')
+        process.stdout.write(stringifyJson(result) + '\n')
       } else {
         process.stdout.write(`Created account "${name}" (${opts.type}/${opts.subtype})\n`)
       }
@@ -176,7 +177,7 @@ function registerArchive(group: Command): void {
       const result = await archiveAccount(client, accountId)
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(result) + '\n')
+        process.stdout.write(stringifyJson(result) + '\n')
       } else {
         process.stdout.write(`Archived account ${ref}\n`)
       }
@@ -198,7 +199,7 @@ function registerRename(group: Command): void {
       const result = await renameAccount(client, accountId, newName)
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(result) + '\n')
+        process.stdout.write(stringifyJson(result) + '\n')
       } else {
         process.stdout.write(`Renamed "${ref}" → "${newName}"\n`)
       }
@@ -210,20 +211,8 @@ interface BalanceOptions {
 }
 
 function parseBalanceTarget(raw: string): number {
-  const trimmed = raw.trim()
-  const sign = trimmed.startsWith('-') ? -1 : 1
-  const body = trimmed.replace(/^[-+]/, '')
-  let digits: string
-  if (/^\d+$/.test(body)) {
-    digits = body
-  } else if (/^\d{1,3}([.,\s_]\d{3})+$/.test(body)) {
-    digits = body.replace(/[.,\s_]/g, '')
-  } else {
-    throw new Error(`invalid balance: ${raw}`)
-  }
-  const n = Number.parseInt(digits, 10)
-  if (!Number.isFinite(n)) throw new Error(`invalid balance: ${raw}`)
-  return sign * n
+  if (/^[+-]?0(?:[.,]0{1,2})?$/.test(raw.trim())) return 0
+  return parseMoney(raw, { allowNegative: true })
 }
 
 function registerBalance(group: Command): void {
@@ -244,7 +233,7 @@ function registerBalance(group: Command): void {
       const result = await updateAccountBalance(client, accountId, newBalance)
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(result) + '\n')
+        process.stdout.write(stringifyJson(result) + '\n')
       } else {
         process.stdout.write(`Updated "${ref}" balance to ${formatCLP(newBalance)}\n`)
       }

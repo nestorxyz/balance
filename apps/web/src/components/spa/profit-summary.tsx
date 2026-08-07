@@ -5,7 +5,7 @@ interface ProfitSummaryProps {
   year: number
 }
 
-const PROFIT_GOAL = 8_000_000
+const PROFIT_GOAL = 800_000_000
 
 export function ProfitSummary({ profit, year }: ProfitSummaryProps) {
   const pct = Math.max(0, Math.min(100, (profit / PROFIT_GOAL) * 100))

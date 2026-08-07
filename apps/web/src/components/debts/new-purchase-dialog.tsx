@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase'
 import { toast } from 'sonner'
 import { useAccounts } from '@/hooks/use-accounts'
 import { useCategories } from '@/hooks/use-categories'
-import { formatMoney } from '@/lib/format'
+import { formatMoney, parseMoney } from '@/lib/format'
 import {
   Dialog,
   DialogContent,
@@ -47,10 +47,11 @@ export function NewPurchaseDialog({ open, onOpenChange }: NewPurchaseDialogProps
     [accounts],
   )
 
-  const parsedAmount = parseInt(amount, 10) || 0
+  let parsedAmount = 0
+  try { parsedAmount = parseMoney(amount) } catch { /* invalid until submitted */ }
   const parsedInstallments = parseInt(installments, 10) || 0
   const installmentAmount = parsedInstallments > 0
-    ? Math.round(parsedAmount / parsedInstallments)
+    ? Math.floor(parsedAmount / parsedInstallments)
     : 0
 
   const mutation = useMutation({
@@ -114,7 +115,8 @@ export function NewPurchaseDialog({ open, onOpenChange }: NewPurchaseDialogProps
               <Label htmlFor="np-amount">Monto total</Label>
               <Input
                 id="np-amount"
-                type="number"
+                type="text"
+                inputMode="decimal"
                 min={1}
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
