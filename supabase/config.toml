@@ -24,3 +24,20 @@ enable_confirmations = false
 
 # Edge functions enabled via Supabase dashboard
 # Cron for daily-charges configured via Supabase dashboard (pg_cron)
+
+# Each function performs authorization in its own handler. New publishable and
+# secret keys are not compatible with the platform's legacy JWT pre-check.
+[functions.api-docs]
+verify_jwt = false
+
+[functions.auth-apikey]
+verify_jwt = false
+
+[functions.daily-backup]
+verify_jwt = false
+
+[functions.daily-charges]
+verify_jwt = false
+
+[functions.gmail-sync]
+verify_jwt = false

@@ -41,17 +41,18 @@ Regla práctica: para lo personal usá los comandos base; para la empresa usá `
 ## Reglas innegociables
 
 1. **Siempre `--json` para parsear**. El output humano es para mostrarle al usuario, no para consumir.
-2. **CLP sin decimales**. Los montos son enteros. `8.5` no es válido; `8500` sí. El parser acepta separadores de miles (`8.000`, `8,000`).
+2. **Dinero exacto**. El ledger conserva centésimos internamente. Los presupuestos personales V1 son exclusivamente PEN y aceptan hasta dos decimales.
 3. **`--account` es obligatorio en `bal add`**. Si el usuario no lo menciona, preguntá antes de ejecutar — no asumas.
 4. **Montos >$100.000 requieren confirmación** antes de correr `bal add`. Mostrá monto + categoría + cuenta y pedí sí/no.
 5. **No reintentes `bal login` más de una vez**. Si falla, pedile al usuario que genere una API key nueva con `bal key create --name "<device>"`.
 6. **Signo en la salida**: expense/debt_payment siempre se muestran con `-`, income/refund con `+`, adjustment/transfer siguen el signo natural del monto.
+7. **Mutaciones de presupuesto**: antes de ejecutar, resolver explícitamente mes (`YYYY-MM`), categoría exacta y monto. Para cambiar ingreso planificado, resolver además que el valor es ingreso planificado (no ingreso real). No inferir metas ni copiar otro mes automáticamente.
 
 ## Setup que debe existir antes de que funcione
 
 Env vars requeridas en la terminal donde corre `bal`:
 - `SUPABASE_URL=https://<your-project-ref>.supabase.co`
-- `SUPABASE_ANON_KEY=sb_publishable_...`
+- `SUPABASE_PUBLISHABLE_KEY=sb_publishable_...`
 - Opcional: `BAL_API_KEY=bal_...` (para `bal login` sin prompt)
 
 Primera vez:

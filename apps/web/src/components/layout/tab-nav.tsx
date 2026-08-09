@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils"
 const tabs = [
   { label: "Cuadrar", to: "/" as const },
   { label: "Movimientos", to: "/movimientos" as const },
+  { label: "Presupuesto", to: "/presupuesto" as const },
   { label: "Deudas", to: "/deudas" as const },
   { label: "SpA", to: "/spa" as const },
   { label: "Patrimonio", to: "/patrimonio" as const },

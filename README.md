@@ -69,7 +69,7 @@ npm install -g @dreamxist/bal-cli
 
 # 2. Point at your backend + log in with an API key
 export SUPABASE_URL="https://<project-ref>.supabase.co"
-export SUPABASE_ANON_KEY="<anon-key>"
+export SUPABASE_PUBLISHABLE_KEY="<publishable-key>"
 bal login --api-key bal_...
 
 # 3. Check your books
@@ -80,6 +80,9 @@ More commands:
 
 ```bash
 bal add 12000 supermercado --account "Checking"
+bal category create "Bebé"
+bal add 5480 "Bebé" --account "Checking" --note "Pañales"
+bal budget set "Bebé" 30000 --month 2026-08
 bal add 1500000 sueldo --type income --account "Checking"
 bal list --period month --type expense
 bal key list

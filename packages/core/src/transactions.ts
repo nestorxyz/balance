@@ -51,7 +51,7 @@ export async function getTransactions(supabase: TypedClient, options?: {
 }) {
   let query = supabase.from('transactions').select('*').order('date', { ascending: false })
   if (options?.accountId) query = query.eq('account_id', options.accountId)
-  if (options?.category) query = query.ilike('category', `${options.category}%`)
+  if (options?.category) query = query.eq('category', options.category)
   if (options?.types && options.types.length > 0) {
     query = query.in('type', options.types as ('income' | 'expense' | 'refund' | 'transfer' | 'debt_payment' | 'adjustment')[])
   } else if (options?.type) {

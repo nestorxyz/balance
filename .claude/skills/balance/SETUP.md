@@ -19,7 +19,7 @@ Solo nombres — el usuario pone los valores en su entorno.
 | Nombre | Scope | Rol |
 |---|---|---|
 | `SUPABASE_URL` | requerido | URL del proyecto Supabase (sin barra final). Acepta también `VITE_SUPABASE_URL`. |
-| `SUPABASE_ANON_KEY` | requerido | Publishable key / anon key del proyecto. Acepta también `VITE_SUPABASE_ANON_KEY`. |
+| `SUPABASE_PUBLISHABLE_KEY` | requerido | Publishable key del proyecto. Acepta también `VITE_SUPABASE_PUBLISHABLE_KEY`. |
 | `BAL_API_KEY` | recomendado | API key (`bal_...`) para `bal login` sin prompt. Generada vía `bal key create`. |
 | `BAL_EMAIL` | solo para `bal key ...` | Email de la cuenta Balance. Alternativa al flag `--email`. |
 | `BAL_PASSWORD` | solo para `bal key ...` | Password. Preferí env var sobre flag para no dejar rastro en historial. |
@@ -57,7 +57,7 @@ Después del primer sync, Claude Code (CLI, web, móvil) descubre el skill autom
 
 ## Verificación — pasos para confirmar que quedó bien
 
-1. Setear env vars (ver tabla arriba). Mínimo `SUPABASE_URL` y `SUPABASE_ANON_KEY`.
+1. Setear env vars (ver tabla arriba). Mínimo `SUPABASE_URL` y `SUPABASE_PUBLISHABLE_KEY`.
 2. Generar API key una vez (pide email+password):
    ```
    npx tsx /path/to/balance-app/apps/cli/src/index.ts key create --name "<device>"

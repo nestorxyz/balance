@@ -23,7 +23,7 @@ Requires **Node 22+**.
 ```bash
 # Point the CLI at your backend
 export SUPABASE_URL="https://<project-ref>.supabase.co"
-export SUPABASE_ANON_KEY="<anon-public-key>"
+export SUPABASE_PUBLISHABLE_KEY="<publishable-key>"
 
 # Authenticate with an API key minted from the web app
 bal login --api-key bal_live_XXXXXXXXXXXXXXXX
@@ -49,10 +49,10 @@ The session is cached at `~/.balance/session.json` (mode `0600`) and refreshed a
 
 | Command | Description |
 | --- | --- |
-| `bal add <amount> <category> --account <name\|id> [--type] [--note] [--date]` | Register a transaction. Types: `expense` (default), `income`, `refund`, `adjustment`. |
+| `bal add <amount> <category> --account <name\|id> [--type] [--note] [--date]` | Register a transaction in an exact category. |
 | `bal transfer <amount> --from <name\|id> --to <name\|id> [--note] [--date]` | Move money between two accounts (does not affect accumulated). |
 | `bal undo <tx-id>` | Reverse a transaction by creating a compensating adjustment (immutable ledger). |
-| `bal list [--period] [--type] [--category] [--account] [--search] [--entity] [--date-from] [--date-to] [--limit]` | List transactions. Period: `day\|week\|month\|quarter\|year\|all`. `--type` accepts comma-separated values. `--entity personal\|spa\|all`. |
+| `bal list [--period] [--type] [--category] [--account] [--search] [--entity] [--date-from] [--date-to] [--limit]` | List transactions. Period: `day\|week\|month\|quarter\|year\|all`. `--type` accepts comma-separated values. |
 | `bal balance [--entity personal\|spa\|all] [--json]` | Show position, accumulated, delta, and per-account balances. Default entity `personal`; `spa` shows business cash + month flows. |
 | `bal patrimonio [--neto] [--tasa <pct>] [--json]` | Gross net worth (personal + SpA) with optional after-tax estimate. |
 
@@ -87,9 +87,19 @@ The session is cached at `~/.balance/session.json` (mode `0600`) and refreshed a
 | Command | Description |
 | --- | --- |
 | `bal category list [--entity]` | List categories. |
-| `bal category create <parent-id> <id> <name>` | Create a subcategory under an existing parent. |
+| `bal category create <name>` | Create a top-level personal category. |
 | `bal category rename <id> <new-name>` | Rename a category. |
 | `bal category delete <id>` | Delete a category (fails if referenced by transactions). |
+
+### Monthly budgets
+
+| Command | Description |
+| --- | --- |
+| `bal budget show --month YYYY-MM` | Show planned and actual monthly availability. |
+| `bal budget income <amount> --month YYYY-MM` | Set planned income in PEN. |
+| `bal budget set <category> <amount> --month YYYY-MM` | Set an exact category target. |
+| `bal budget remove <category> --month YYYY-MM` | Remove a category target. |
+| `bal budget copy --from YYYY-MM --to YYYY-MM [--replace]` | Copy a month, protecting populated destinations by default. |
 
 ### Recurring charges
 
@@ -149,11 +159,11 @@ Chilean tax notes: foreign SaaS purchases use `bal spa gasto` (expense, no VAT c
 | Var | Purpose | Required |
 | --- | --- | --- |
 | `SUPABASE_URL` | Your Balance backend URL. | Yes |
-| `SUPABASE_ANON_KEY` | Public anon key from the Supabase project. | Yes |
+| `SUPABASE_PUBLISHABLE_KEY` | Publishable key from the Supabase project. | Yes |
 | `BAL_API_KEY` | Default API key for `bal login` (avoids passing `--api-key`). | No |
 | `BAL_EMAIL` / `BAL_PASSWORD` | Default credentials for `bal key create/list/revoke` (which require fresh password auth). | No |
 | `BAL_SESSION_FILE` | Override the session cache path (default `~/.balance/session.json`). | No |
-| `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` | Read as fallbacks for the two `SUPABASE_*` vars. | No |
+| `VITE_SUPABASE_URL` / `VITE_SUPABASE_PUBLISHABLE_KEY` | Read as fallbacks for the two `SUPABASE_*` vars. | No |
 
 The CLI does **not** read `.env` files automatically. Use a tool like [direnv](https://direnv.net) or your shell profile to export the vars.
 

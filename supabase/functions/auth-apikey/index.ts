@@ -1,11 +1,9 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { getClientIp, getLimiter } from '../_shared/rate-limit.ts'
+import { getSupabaseSecretKey } from '../_shared/supabase-env.ts'
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!
-const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-// New secret key for Auth Admin API (ECC-compatible)
-// Set via: supabase secrets set AUTH_SECRET_KEY=sb_secret_xxx
-const authSecretKey = Deno.env.get('AUTH_SECRET_KEY')
+const supabaseSecretKey = getSupabaseSecretKey()
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -27,13 +25,11 @@ async function sha256(input: string): Promise<string> {
 
 // Call GoTrue Admin API directly with the new secret key
 async function adminFetch(path: string, options: RequestInit = {}): Promise<Response> {
-  const key = authSecretKey ?? supabaseServiceKey
   return fetch(`${supabaseUrl}/auth/v1${path}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
-      'apikey': key,
-      'Authorization': `Bearer ${key}`,
+      'apikey': supabaseSecretKey,
       ...options.headers,
     },
   })
@@ -72,7 +68,7 @@ Deno.serve(async (req) => {
     }
 
     const keyHash = await sha256(apiKey)
-    const supabase = createClient(supabaseUrl, supabaseServiceKey)
+    const supabase = createClient(supabaseUrl, supabaseSecretKey)
 
     const { data: keyRecord, error } = await supabase
       .from('api_keys')

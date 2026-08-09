@@ -661,6 +661,36 @@ export type Database = {
         }
         Relationships: []
       }
+      transaction_groups: {
+        Row: {
+          created_at: string
+          entity: Database["public"]["Enums"]["entity_type"]
+          id: string
+          is_archived: boolean
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          entity?: Database["public"]["Enums"]["entity_type"]
+          id?: string
+          is_archived?: boolean
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          entity?: Database["public"]["Enums"]["entity_type"]
+          id?: string
+          is_archived?: boolean
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       transactions: {
         Row: {
           account_id: string
@@ -671,6 +701,7 @@ export type Database = {
           debt_id: string | null
           description: string
           entity: Database["public"]["Enums"]["entity_type"]
+          group_id: string | null
           id: string
           linked_invoice_id: string | null
           metadata: Json | null
@@ -688,6 +719,7 @@ export type Database = {
           debt_id?: string | null
           description: string
           entity?: Database["public"]["Enums"]["entity_type"]
+          group_id?: string | null
           id?: string
           linked_invoice_id?: string | null
           metadata?: Json | null
@@ -705,6 +737,7 @@ export type Database = {
           debt_id?: string | null
           description?: string
           entity?: Database["public"]["Enums"]["entity_type"]
+          group_id?: string | null
           id?: string
           linked_invoice_id?: string | null
           metadata?: Json | null
@@ -714,6 +747,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "transactions_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "transaction_groups"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "fk_transactions_debt"
             columns: ["debt_id"]
@@ -1246,9 +1286,23 @@ export type Database = {
           p_category: string
           p_date?: string
           p_description: string
+          p_group_id?: string
           p_type?: Database["public"]["Enums"]["transaction_type"]
         }
         Returns: Json
+      }
+      create_transaction_group: {
+        Args: {
+          p_entity?: Database["public"]["Enums"]["entity_type"]
+          p_name: string
+        }
+        Returns: Database["public"]["Tables"]["transaction_groups"]["Row"]
+        SetofOptions: {
+          from: "*"
+          to: "transaction_groups"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       create_transfer: {
         Args: {
@@ -1261,6 +1315,26 @@ export type Database = {
         Returns: Json
       }
       delete_category: { Args: { p_category_id: string }; Returns: undefined }
+      archive_transaction_group: {
+        Args: { p_group_id: string }
+        Returns: Database["public"]["Tables"]["transaction_groups"]["Row"]
+        SetofOptions: {
+          from: "*"
+          to: "transaction_groups"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      rename_transaction_group: {
+        Args: { p_group_id: string; p_name: string }
+        Returns: Database["public"]["Tables"]["transaction_groups"]["Row"]
+        SetofOptions: {
+          from: "*"
+          to: "transaction_groups"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       get_f29_summary: {
         Args: { p_month: number; p_year: number }
         Returns: Json
@@ -1677,4 +1751,3 @@ export const Constants = {
     },
   },
 } as const
-

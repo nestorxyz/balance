@@ -122,7 +122,7 @@ import type { Database } from './types'
 export function createSupabaseClient(options?: { accessToken?: string }) {
   const client = createClient<Database>(
     process.env.SUPABASE_URL!,
-    process.env.SUPABASE_ANON_KEY!,
+    process.env.SUPABASE_PUBLISHABLE_KEY!,
     options?.accessToken
       ? { global: { headers: { Authorization: `Bearer ${options.accessToken}` } } }
       : undefined
@@ -1259,7 +1259,7 @@ Deno.serve(async (req) => {
 
   const supabase = createClient(
     Deno.env.get('SUPABASE_URL')!,
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+    JSON.parse(Deno.env.get('SUPABASE_SECRET_KEYS')!).default
   )
 
   const { data: userId } = await supabase.rpc('validate_api_key', { p_key: apiKey })

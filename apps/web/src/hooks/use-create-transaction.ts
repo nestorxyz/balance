@@ -26,6 +26,7 @@ export function useCreateTransaction(): UseMutationResult<unknown, Error, Create
       queryClient.invalidateQueries({ queryKey: ['transactions'] })
       queryClient.invalidateQueries({ queryKey: ['accounts'] })
       queryClient.invalidateQueries({ queryKey: ['reconciliation'] })
+      queryClient.invalidateQueries({ queryKey: ['budget'] })
 
       toast.success(`Movimiento registrado (${formatMoney(variables.amount)})`, {
         action: {

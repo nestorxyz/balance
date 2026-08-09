@@ -1,18 +1,12 @@
 import type { TransactionFilters } from '@/hooks/use-transactions'
 import { useAccounts } from '@/hooks/use-accounts'
+import { useCategories } from '@/hooks/use-categories'
 import { cn } from '@/lib/utils'
 
 const MONTH_NAMES = [
   'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
   'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre',
 ]
-
-const CATEGORY_FILTERS = [
-  { value: 'necesidad', label: 'Necesidades', color: 'bg-blue-500' },
-  { value: 'consumo', label: 'Consumo', color: 'bg-orange-500' },
-  { value: 'ingreso', label: 'Ingresos', color: 'bg-emerald-500' },
-  { value: 'ahorro', label: 'Ahorro', color: 'bg-violet-500' },
-] as const
 
 const TYPE_FILTERS = [
   { value: 'income', label: 'Ingresos' },
@@ -36,6 +30,7 @@ interface TransactionFiltersProps {
 
 export function TransactionFiltersBar({ filters, onFiltersChange }: TransactionFiltersProps) {
   const { data: accounts } = useAccounts()
+  const { data: categories = [] } = useCategories({ entity: 'personal' })
   const parsed = filters.month ? parseMonth(filters.month) : null
 
   const activeAccounts = (accounts ?? []).filter((a) => !a.is_archived && a.on_budget && a.subtype !== 'receivable' && a.subtype !== 'payable')
@@ -98,25 +93,25 @@ export function TransactionFiltersBar({ filters, onFiltersChange }: TransactionF
               <option key={a.id} value={a.id}>{a.name}</option>
             ))}
           </select>
+
         </div>
       </div>
 
       {/* Category + type pills */}
       <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide sm:flex-wrap">
-        {CATEGORY_FILTERS.map((cat) => (
+        {categories.filter((cat) => cat.parent_id === null).map((cat) => (
           <button
-            key={cat.value}
+            key={cat.id}
             type="button"
-            onClick={() => toggleCategory(cat.value)}
+            onClick={() => toggleCategory(cat.id)}
             className={cn(
               'flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors',
-              filters.category === cat.value
+              filters.category === cat.id
                 ? 'border-foreground bg-foreground text-background'
                 : 'border-border text-muted-foreground hover:text-foreground',
             )}
           >
-            <span className={cn('size-1.5 rounded-full', cat.color)} />
-            {cat.label}
+            {cat.name}
           </button>
         ))}
 

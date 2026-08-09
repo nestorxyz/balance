@@ -1,7 +1,8 @@
 import { createClient, SupabaseClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { getSupabaseSecretKey } from '../_shared/supabase-env.ts'
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!
-const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+const supabaseSecretKey = getSupabaseSecretKey()
 
 type ChargeResult = string
 
@@ -138,7 +139,7 @@ Deno.serve(async (req) => {
   let authenticatedUserId: string | null = null
 
   if (!isCronCall && bearerToken) {
-    const authClient = createClient(supabaseUrl, supabaseServiceKey)
+    const authClient = createClient(supabaseUrl, supabaseSecretKey)
     const { data: { user }, error } = await authClient.auth.getUser(bearerToken)
     if (user && !error) {
       authenticatedUserId = user.id
@@ -149,7 +150,7 @@ Deno.serve(async (req) => {
     return new Response('Unauthorized', { status: 401 })
   }
 
-  const supabase = createClient(supabaseUrl, supabaseServiceKey)
+  const supabase = createClient(supabaseUrl, supabaseSecretKey)
   const today = new Date()
   const currentDay = today.getDate()
   const currentMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`
