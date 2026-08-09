@@ -7,9 +7,13 @@ export function getSupabaseUrl(): string {
   return url
 }
 
-export function getSupabaseAnonKey(): string {
-  const key = process.env.SUPABASE_ANON_KEY ?? process.env.VITE_SUPABASE_ANON_KEY
-  if (!key) throw new Error('Missing SUPABASE_ANON_KEY (or VITE_SUPABASE_ANON_KEY) env var')
+export function getSupabasePublishableKey(): string {
+  const key = process.env.SUPABASE_PUBLISHABLE_KEY ?? process.env.VITE_SUPABASE_PUBLISHABLE_KEY
+  if (!key) {
+    throw new Error(
+      'Missing SUPABASE_PUBLISHABLE_KEY (or VITE_SUPABASE_PUBLISHABLE_KEY) env var',
+    )
+  }
   return key
 }
 

@@ -1,4 +1,5 @@
 import type { Command } from 'commander'
+import { stringifyJson } from '../lib/json'
 import { createTransfer } from '@balance/core'
 import { getAuthedClient } from '../lib/client'
 import { fail } from '../lib/exit'
@@ -50,7 +51,7 @@ export function registerTransferCommand(program: Command): void {
       })
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(result) + '\n')
+        process.stdout.write(stringifyJson(result) + '\n')
       } else {
         process.stdout.write(
           `Transferred ${formatCLP(amount)} from ${opts.from} to ${opts.to}\n`,

@@ -124,8 +124,8 @@ App de finanzas personales que unifica la gestion financiera de una persona y un
 ## Ajustes Recomendados
 ### 4. tailwindcss-animate -> tw-animate-css
 ### 5. Supabase API Keys: Nuevo modelo
-- `SUPABASE_ANON_KEY` en el codigo actual -> sera `SUPABASE_PUBLISHABLE_KEY`
-- `service_role` en Edge Functions -> sera `sb_secret_...`
+- `SUPABASE_PUBLISHABLE_KEY` para CLI/core y `VITE_SUPABASE_PUBLISHABLE_KEY` para web
+- `SUPABASE_SECRET_KEYS.default` en Edge Functions hospedadas; `SUPABASE_SECRET_KEY` en local
 - El Edge Function pattern para API keys de CLI sigue siendo valido, pero la implementacion interna cambia
 ## Stack Confirmado (con correcciones aplicadas)
 ### Core Framework
@@ -255,7 +255,7 @@ App de finanzas personales que unifica la gestion financiera de una persona y un
 - Web: Vercel (zero-config Vite SPA) — auto-deploy from main branch
 - DB: Supabase (project ref: YOUR_PROJECT_REF)
 - `supabase db push` for migrations, `vercel --prod` or push to main for frontend
-- Environment: VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY in Vercel env vars
+- Environment: VITE_SUPABASE_URL + VITE_SUPABASE_PUBLISHABLE_KEY in Vercel env vars
 <!-- GSD:conventions-end -->
 
 <!-- GSD:architecture-start source:ARCHITECTURE.md -->

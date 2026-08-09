@@ -101,10 +101,10 @@ begin
           v_pending := v_pending + 1;
           continue;
         end if;
-        v_amount := round(v_row.amount * p_usd_rate / 100)::bigint;
+        v_amount := round(v_row.amount * p_usd_rate)::bigint;
         v_meta := v_meta || jsonb_build_object(
           'fx_estimated', true,
-          'original_usd_cents', v_row.amount,
+          'original_usd_minor_units', v_row.amount,
           'usd_rate', p_usd_rate
         );
       end if;

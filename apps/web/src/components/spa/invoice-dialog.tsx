@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useCreateSpaInvoice, useUploadFactura } from '@/hooks/use-spa'
-import { formatMoney } from '@/lib/format'
+import { formatMoney, parseMoney } from '@/lib/format'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -39,7 +39,8 @@ export function InvoiceDialog({ open, onClose, direction, spaAccounts }: Invoice
   const mutation = useCreateSpaInvoice()
   const uploadMutation = useUploadFactura()
 
-  const net = Number(netAmount) || 0
+  let net = 0
+  try { net = parseMoney(netAmount) } catch { /* invalid until submitted */ }
   const hasIva = IVA_DOC_TYPES.includes(docType)
   const iva = hasIva ? Math.round(net * 0.19) : 0
   const total = net + iva
@@ -135,7 +136,7 @@ export function InvoiceDialog({ open, onClose, direction, spaAccounts }: Invoice
             <Input
               id="inv-net"
               type="text"
-              inputMode="numeric"
+              inputMode="decimal"
               className="font-mono"
               value={netAmount}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNetAmount(e.target.value.replace(/\D/g, ''))}

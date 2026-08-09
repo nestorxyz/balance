@@ -10,9 +10,10 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { parseEmail, sourceForEmail, type ParsedMovement, type RawEmail } from './parsers.ts'
 import { buildGmailQuery, extractBody, headerValue, type GmailPayload } from './gmail.ts'
+import { getSupabaseSecretKey } from '../_shared/supabase-env.ts'
 
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!
-const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+const supabaseSecretKey = getSupabaseSecretKey()
 
 const GMAIL_API = 'https://gmail.googleapis.com/gmail/v1/users/me'
 const DEFAULT_LOOKBACK_MS = 7 * 24 * 60 * 60 * 1000
@@ -102,7 +103,7 @@ Deno.serve(async (req) => {
   let authenticatedUserId: string | null = null
 
   if (!isCronCall && bearerToken) {
-    const authClient = createClient(supabaseUrl, supabaseServiceKey)
+    const authClient = createClient(supabaseUrl, supabaseSecretKey)
     const { data: { user }, error } = await authClient.auth.getUser(bearerToken)
     if (user && !error) authenticatedUserId = user.id
   }
@@ -128,7 +129,7 @@ Deno.serve(async (req) => {
     )
   }
 
-  const supabase = createClient(supabaseUrl, supabaseServiceKey)
+  const supabase = createClient(supabaseUrl, supabaseSecretKey)
 
   // Watermark: explicit since (query param or JSON body, for backfill)
   // > sync_state > 7 days back

@@ -1,4 +1,5 @@
 import type { Command } from 'commander'
+import { stringifyJson } from '../lib/json'
 import { createSnapshot, getSnapshotHistory } from '@balance/core'
 import { getAuthedClient } from '../lib/client'
 import { fail } from '../lib/exit'
@@ -24,7 +25,7 @@ function registerCreate(group: Command): void {
       const result = await createSnapshot(client, opts.date)
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(result) + '\n')
+        process.stdout.write(stringifyJson(result) + '\n')
       } else {
         process.stdout.write(`Snapshot created for ${opts.date ?? 'today'}\n`)
       }
@@ -59,7 +60,7 @@ function registerList(group: Command): void {
       const rows = ((await getSnapshotHistory(client, limit)) ?? []) as SnapshotRow[]
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(rows) + '\n')
+        process.stdout.write(stringifyJson(rows) + '\n')
         return
       }
 

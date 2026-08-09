@@ -41,7 +41,7 @@ supabase db reset     # apply migrations + seed
 npm run dev           # web (5173) + cli watcher
 ```
 
-If you just want to point at a hosted dev project, fill `.env` with `SUPABASE_URL` and `SUPABASE_ANON_KEY` (see [SETUP.md](./SETUP.md) for details).
+If you just want to point at a hosted dev project, fill `.env` with `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` (see [SETUP.md](./SETUP.md) for details).
 
 ---
 

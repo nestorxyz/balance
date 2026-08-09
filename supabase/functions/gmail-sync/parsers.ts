@@ -87,12 +87,13 @@ function matchGroup(text: string, re: RegExp): string | null {
   return m?.[1] !== undefined ? m[1].trim() : null
 }
 
-/** "$1.234.567" or "$ 60,173" -> integer CLP pesos (CLP has no decimals). */
+/** "$1.234.567" or "$ 60,173" -> integer CLP minor units (hundredths). */
 export function parseClpAmount(raw: string): number | null {
   const digits = matchGroup(raw.replace(/\s/g, ''), /^\$?([\d.,]+)$/)
   if (digits === null) return null
   const value = Number.parseInt(digits.replace(/[.,]/g, ''), 10)
-  return Number.isFinite(value) ? value : null
+  const minorUnits = value * 100
+  return Number.isSafeInteger(minorUnits) ? minorUnits : null
 }
 
 /** "US$23,79" -> 2379 (integer USD cents). */

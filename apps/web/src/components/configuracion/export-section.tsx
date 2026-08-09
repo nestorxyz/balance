@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { exportAllData, exportTableAsCsv, downloadBlob } from '@balance/core'
+import { exportAllData, exportTableAsCsv, downloadBlob, stringifyMoneyJson } from '@balance/core'
 import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
@@ -18,7 +18,7 @@ export function ExportSection() {
     setLoadingJson(true)
     try {
       const data = await exportAllData(supabase)
-      downloadBlob(JSON.stringify(data, null, 2), `balance-export-${todayString()}.json`, 'application/json')
+      downloadBlob(stringifyMoneyJson(data, 2), `balance-export-${todayString()}.json`, 'application/json')
       toast.success('Export JSON descargado')
     } catch (e) {
       toast.error(e instanceof Error ? e.message : 'Error al exportar')

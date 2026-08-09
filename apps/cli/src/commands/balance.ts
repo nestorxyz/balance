@@ -1,4 +1,5 @@
 import type { Command } from 'commander'
+import { stringifyJson } from '../lib/json'
 import {
   getAccounts,
   getReconciliationStatus,
@@ -68,7 +69,7 @@ export function registerBalanceCommand(program: Command): void {
           : []
         const pendingRecurring = status.filter((s) => s.status === 'due')
         process.stdout.write(
-          JSON.stringify({ reconciliation: rec, accounts, pending_recurring: pendingRecurring }) + '\n',
+          stringifyJson({ reconciliation: rec, accounts, pending_recurring: pendingRecurring }) + '\n',
         )
         return
       }
@@ -138,7 +139,7 @@ async function renderSpa(
   const total = dash.accounts.reduce((sum, a) => sum + a.balance, 0)
 
   if (json) {
-    process.stdout.write(JSON.stringify({ ...dash, total }) + '\n')
+    process.stdout.write(stringifyJson({ ...dash, total }) + '\n')
     return
   }
 

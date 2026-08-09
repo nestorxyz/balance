@@ -46,13 +46,16 @@ export type {
   CreateRecurringInput,
   UpdateRecurringInput,
 } from './recurring'
-export { usdToClp, parseUsdAmount } from './money'
-export { getCategories, createSubcategory, renameCategory, deleteCategory } from './categories'
+export { parseMoney, moneyToDecimal, formatMoney, assertMinorUnits, roundMoney, usdToClp, parseUsdAmount } from './money'
+export type { ParseMoneyOptions } from './money'
+export { getCategories, createSubcategory, createTopLevelCategory, renameCategory, archiveCategory, deleteCategory } from './categories'
+export { getMonthlyBudget, setBudgetIncome, setBudgetTarget, removeBudgetTarget, copyBudget } from './budgets'
+export type { MonthlyBudget, BudgetCategory } from './budgets'
 export { createInstallmentPurchase, payDebtInstallment, payOffDebt, getActiveDebts, archiveDebt } from './debts'
 export { createTransfer, createInterEntityTransfer, receivePayment } from './transfers'
 export { createSnapshot, getSnapshotHistory } from './snapshots'
 
-export { exportAllData, exportTableAsCsv, downloadBlob } from './export'
+export { exportAllData, exportTableAsCsv, downloadBlob, serializeMoneyFields, stringifyMoneyJson } from './export'
 
 export { generateApiKey, hashApiKey } from './api-keys'
 

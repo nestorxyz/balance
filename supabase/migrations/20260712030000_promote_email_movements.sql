@@ -20,8 +20,8 @@
 --     TC is not an expense). One side resolves by account_hint, the other by
 --     the bank keyword of the source.
 --  7. bci_spa -> entity spa, income, category NULL (SpA only receives via BCI).
---  8. USD -> converted with p_usd_rate (CLP per USD, amount in cents),
---     metadata.fx_estimated + original_usd_cents. Without rate -> stays pending.
+--  8. USD -> converted with p_usd_rate (CLP per USD, amount in minor units),
+--     metadata.fx_estimated + original_usd_minor_units. Without rate -> stays pending.
 --
 -- Account matching: account_hint against accounts.metadata
 -- ("bank_account_numbers": [..] for bank accounts, "card_last4" for TCs).
@@ -129,10 +129,10 @@ begin
           v_pending := v_pending + 1;
           continue;
         end if;
-        v_amount := round(v_row.amount * p_usd_rate / 100)::bigint;
+        v_amount := round(v_row.amount * p_usd_rate)::bigint;
         v_meta := v_meta || jsonb_build_object(
           'fx_estimated', true,
-          'original_usd_cents', v_row.amount,
+          'original_usd_minor_units', v_row.amount,
           'usd_rate', p_usd_rate
         );
       end if;

@@ -11,7 +11,7 @@ import { useAccounts, type Account } from '@/hooks/use-accounts'
 import { useSnapshots } from '@/hooks/use-snapshots'
 import { useFintualSync } from '@/hooks/use-fintual'
 import { supabase } from '@/lib/supabase'
-import { formatMoney } from '@/lib/format'
+import { formatMoney, parseMoney } from '@/lib/format'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 
@@ -324,8 +324,7 @@ function AssetAccountRow({ account }: { account: Account }) {
           className="flex items-center gap-2 rounded-sm bg-muted/50 px-2 py-2 mb-1"
           onSubmit={(e) => {
             e.preventDefault()
-            const val = parseInt(newValue, 10)
-            if (!isNaN(val)) mut.mutate(val)
+            try { mut.mutate(parseMoney(newValue, { allowNegative: true })) } catch { /* keep form open */ }
           }}
         >
           <input
@@ -337,7 +336,8 @@ function AssetAccountRow({ account }: { account: Account }) {
           <input
             value={newValue}
             onChange={(e) => setNewValue(e.target.value)}
-            type="number"
+            type="text"
+            inputMode="decimal"
             placeholder="Nuevo valor total"
             className="flex-1 rounded-sm border border-input bg-background px-2 py-1 text-right font-mono text-sm focus:border-ring focus:ring-1 focus:ring-ring/20 focus:outline-none"
             autoFocus

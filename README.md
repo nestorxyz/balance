@@ -6,6 +6,13 @@
 
 Balance is a personal-finance app for developers who want full control over their money model. It is built on top of Supabase, ships a TypeScript CLI, and uses the **Balance Assertion with Reconciliation** pattern at its core: your real positions (cash in accounts, cards, investments, debts) must always equal the sum of your registered transactions. Delta = 0 or you find out fast.
 
+> **Money convention:** TypeScript money values and PostgreSQL `bigint` money
+> columns contain integer hundredths (`12.34` is stored as `1234`), including
+> CLP. Input accepts `1234.56`, `1,234.56`, `1234,56`, and `1.234,56`. JSON and
+> CSV expose money as exact two-place strings such as `"1234.50"`. This is a
+> breaking fresh-install change: existing databases require `supabase db reset`;
+> no automatic conversion is provided.
+
 This is not a YNAB or Mint replacement. It is a self-hosted, code-first alternative for people who like spreadsheets, the command line, and the idea that their financial system should be auditable end to end.
 
 Status: **Beta — building in public.** Used daily by the author to migrate 9 years of Excel history. Schema is stable; UI iterating.
@@ -62,7 +69,7 @@ npm install -g @dreamxist/bal-cli
 
 # 2. Point at your backend + log in with an API key
 export SUPABASE_URL="https://<project-ref>.supabase.co"
-export SUPABASE_ANON_KEY="<anon-key>"
+export SUPABASE_PUBLISHABLE_KEY="<publishable-key>"
 bal login --api-key bal_...
 
 # 3. Check your books
@@ -73,6 +80,9 @@ More commands:
 
 ```bash
 bal add 12000 supermercado --account "Checking"
+bal category create "Bebé"
+bal add 5480 "Bebé" --account "Checking" --note "Pañales"
+bal budget set "Bebé" 30000 --month 2026-08
 bal add 1500000 sueldo --type income --account "Checking"
 bal list --period month --type expense
 bal key list

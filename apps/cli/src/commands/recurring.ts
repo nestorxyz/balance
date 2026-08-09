@@ -1,4 +1,5 @@
 import type { Command } from 'commander'
+import { stringifyJson } from '../lib/json'
 import {
   createRecurringCharge,
   deleteRecurringCharge,
@@ -110,7 +111,7 @@ function registerList(group: Command): void {
 
       if (opts.json) {
         process.stdout.write(
-          JSON.stringify(view.map((v) => ({ ...v.row, status: v.st?.status ?? null, due_date: v.st?.due_date ?? null }))) + '\n',
+          stringifyJson(view.map((v) => ({ ...v.row, status: v.st?.status ?? null, due_date: v.st?.due_date ?? null }))) + '\n',
         )
         return
       }
@@ -245,7 +246,7 @@ function registerCreate(group: Command): void {
       })
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(created) + '\n')
+        process.stdout.write(stringifyJson(created) + '\n')
       } else {
         const kind = autoCharge ? 'auto' : 'manual'
         process.stdout.write(
@@ -338,7 +339,7 @@ function registerEdit(group: Command): void {
 
       const updated = await updateRecurringCharge(client, charge.id, patch)
       if (opts.json) {
-        process.stdout.write(JSON.stringify(updated) + '\n')
+        process.stdout.write(stringifyJson(updated) + '\n')
       } else {
         process.stdout.write(`  ${ui.positive('✓')} ${ui.dim('updated')} ${ui.strong(updated.name)}\n`)
       }
@@ -377,7 +378,7 @@ function registerPay(group: Command): void {
 
       const result = await payRecurringCharge(client, { chargeId: charge.id, date: opts.date, amount })
       if (opts.json) {
-        process.stdout.write(JSON.stringify(result) + '\n')
+        process.stdout.write(stringifyJson(result) + '\n')
         return
       }
       if (result.status === 'charged') {
@@ -427,7 +428,7 @@ function registerSync(group: Command): void {
 
       if (!apply) {
         if (opts.json) {
-          process.stdout.write(JSON.stringify(preview) + '\n')
+          process.stdout.write(stringifyJson(preview) + '\n')
         } else {
           renderSyncResult(preview, would.length === 0 ? 'Nada pendiente.' : 'Vista previa (usa --yes para aplicar):')
         }
@@ -440,7 +441,7 @@ function registerSync(group: Command): void {
         dryRun: false,
       })
       if (opts.json) {
-        process.stdout.write(JSON.stringify(result) + '\n')
+        process.stdout.write(stringifyJson(result) + '\n')
       } else {
         renderSyncResult(result, 'Aplicado:')
       }
@@ -486,7 +487,7 @@ function registerDelete(group: Command): void {
       }
       await deleteRecurringCharge(client, charge.id)
       if (opts.json) {
-        process.stdout.write(JSON.stringify({ deleted: charge.id }) + '\n')
+        process.stdout.write(stringifyJson({ deleted: charge.id }) + '\n')
       } else {
         process.stdout.write(`  ${ui.positive('✓')} ${ui.dim('deleted')} ${ui.strong(charge.name)}\n`)
       }

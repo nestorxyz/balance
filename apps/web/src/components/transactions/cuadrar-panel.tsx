@@ -7,7 +7,7 @@ import { useAccounts } from '@/hooks/use-accounts'
 import { useCategories } from '@/hooks/use-categories'
 import { useAutoCharges } from '@/hooks/use-auto-charges'
 import { supabase } from '@/lib/supabase'
-import { formatMoney } from '@/lib/format'
+import { formatMoney, parseMoney } from '@/lib/format'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -80,8 +80,9 @@ export function CuadrarPanel() {
   }
 
   function handleSubmit() {
-    const amt = parseInt(amount.replace(/\./g, ''), 10)
-    if (!amt || !accountId) return
+    let amt: number
+    try { amt = parseMoney(amount) } catch { return }
+    if (!accountId) return
 
     if (mode === 'gasto' && selectedCategory) {
       createMut.mutate({ amount: amt, category: selectedCategory, accountId, description, type: 'expense' })
@@ -312,7 +313,7 @@ function TransactionFormFields({
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             type="text"
-            inputMode="numeric"
+            inputMode="decimal"
             placeholder="0"
             className="w-full rounded-sm border border-input bg-background py-2 pl-7 pr-3 font-mono text-sm focus:border-ring focus:ring-1 focus:ring-ring/20 focus:outline-none"
             autoFocus

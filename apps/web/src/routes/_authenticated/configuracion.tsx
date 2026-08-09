@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { SkeletonCard } from '@/components/ui/skeleton'
 import { SyncButton } from '@/components/sync-button'
 import { toast } from 'sonner'
-import { formatMoney } from '@/lib/format'
+import { formatMoney, parseMoney } from '@/lib/format'
 import { ExportSection } from '@/components/configuracion/export-section'
 import { ApiKeysSection } from '@/components/configuracion/api-keys-section'
 
@@ -278,7 +278,7 @@ function AddAccountRow({
         name,
         type: defaultType,
         subtype: defaultSubtype,
-        balance: balance ? parseInt(balance, 10) : 0,
+        balance: balance ? parseMoney(balance, { allowNegative: true }) : 0,
         onBudget: defaultSubtype !== 'investment' && defaultSubtype !== 'property',
       }),
     onSuccess: () => {
@@ -309,7 +309,8 @@ function AddAccountRow({
         value={balance}
         onChange={(e) => setBalance(e.target.value)}
         placeholder="Saldo inicial"
-        type="number"
+        type="text"
+        inputMode="decimal"
         className="w-32 rounded-sm border border-input bg-background px-2 py-1 text-sm focus:border-ring focus:ring-1 focus:ring-ring/20 focus:outline-none"
       />
       <Button size="sm" type="submit" disabled={createMut.isPending || !name.trim()}>
@@ -338,7 +339,7 @@ function RecurringChargesSection({ accounts }: { accounts: Account[] }) {
   function handleAdd() {
     if (!name || !amount || !accountId) return
     createMut.mutate(
-      { name, amount: parseInt(amount, 10), day_of_month: parseInt(day, 10), category, account_id: accountId },
+      { name, amount: parseMoney(amount), day_of_month: parseInt(day, 10), category, account_id: accountId },
       {
         onSuccess: () => {
           setAdding(false)
@@ -378,7 +379,7 @@ function RecurringChargesSection({ accounts }: { accounts: Account[] }) {
             onSubmit={(e) => { e.preventDefault(); handleAdd() }}
           >
             <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Nombre" className="w-32 rounded-sm border border-input bg-background px-2 py-1 text-sm focus:border-ring focus:ring-1 focus:ring-ring/20 focus:outline-none" autoFocus />
-            <input value={amount} onChange={(e) => setAmount(e.target.value)} type="number" placeholder="Monto" className="w-24 rounded-sm border border-input bg-background px-2 py-1 font-mono text-sm focus:border-ring focus:ring-1 focus:ring-ring/20 focus:outline-none" />
+            <input value={amount} onChange={(e) => setAmount(e.target.value)} type="text" inputMode="decimal" placeholder="Monto" className="w-24 rounded-sm border border-input bg-background px-2 py-1 font-mono text-sm focus:border-ring focus:ring-1 focus:ring-ring/20 focus:outline-none" />
             <select value={day} onChange={(e) => setDay(e.target.value)} className="w-20 rounded-sm border border-input bg-background px-2 py-1 text-sm focus:border-ring focus:ring-1 focus:ring-ring/20 focus:outline-none">
               {Array.from({ length: 31 }, (_, i) => <option key={i + 1} value={i + 1}>Día {i + 1}</option>)}
             </select>

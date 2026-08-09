@@ -9,6 +9,7 @@ import { registerCategoryCommand } from './commands/category'
 import { registerDebtCommand } from './commands/debt'
 import { registerExportCommand } from './commands/export'
 import { registerFintualCommand } from './commands/fintual'
+import { registerBudgetCommand } from './commands/budget'
 import { registerInboxCommand } from './commands/inbox'
 import { registerKeyCommand } from './commands/key'
 import { registerListCommand } from './commands/list'
@@ -48,6 +49,7 @@ registerAccountCommand(program)
 registerDebtCommand(program)
 registerReceivableCommand(program)
 registerCategoryCommand(program)
+registerBudgetCommand(program)
 registerRecurringCommand(program)
 registerSnapshotCommand(program)
 registerExportCommand(program)

@@ -5,10 +5,24 @@ type TypedClient = SupabaseClient<Database>
 
 export async function getCategories(supabase: TypedClient, options?: {
   entity?: 'personal' | 'spa'
+  includeArchived?: boolean
 }) {
   let query = supabase.from('categories').select('*').order('sort_order')
   if (options?.entity) query = query.eq('entity', options.entity)
+  if (!options?.includeArchived) query = query.eq('is_archived' as never, false)
   const { data, error } = await query
+  if (error) throw error
+  return data
+}
+
+export async function createTopLevelCategory(supabase: TypedClient, name: string) {
+  const { data, error } = await (supabase.rpc as any)('create_top_level_category', { p_name: name })
+  if (error) throw error
+  return data
+}
+
+export async function archiveCategory(supabase: TypedClient, categoryId: string) {
+  const { data, error } = await (supabase.rpc as any)('archive_category', { p_category_id: categoryId })
   if (error) throw error
   return data
 }

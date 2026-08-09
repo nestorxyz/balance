@@ -1,4 +1,5 @@
 import type { Command } from 'commander'
+import { stringifyJson } from '../lib/json'
 import {
   archiveDebt,
   createInstallmentPurchase,
@@ -53,7 +54,7 @@ function registerList(group: Command): void {
       const debts = ((await getActiveDebts(client)) ?? []) as DebtRow[]
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(debts) + '\n')
+        process.stdout.write(stringifyJson(debts) + '\n')
         return
       }
 
@@ -130,7 +131,7 @@ function registerCreate(group: Command): void {
       })
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(result) + '\n')
+        process.stdout.write(stringifyJson(result) + '\n')
       } else {
         process.stdout.write(
           `Created debt: ${formatCLP(amount)} in ${installments} cuotas (${category})\n`,
@@ -162,7 +163,7 @@ function registerPay(group: Command): void {
       const result = await payDebtInstallment(client, debtId, opts.date)
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(result) + '\n')
+        process.stdout.write(stringifyJson(result) + '\n')
       } else {
         process.stdout.write(`Paid one installment of debt ${debtId}\n`)
       }
@@ -201,7 +202,7 @@ function registerPayoff(group: Command): void {
       const result = await payOffDebt(client, debtId, actualAmount)
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(result) + '\n')
+        process.stdout.write(stringifyJson(result) + '\n')
       } else {
         process.stdout.write(`Paid off debt ${debtId}\n`)
       }
@@ -229,7 +230,7 @@ function registerArchive(group: Command): void {
       const result = await archiveDebt(client, debtId)
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(result) + '\n')
+        process.stdout.write(stringifyJson(result) + '\n')
       } else {
         process.stdout.write(`Archived debt ${debtId}\n`)
       }

@@ -5,6 +5,44 @@ import {
   getClientIp,
   makeMemoryLimiter,
 } from '../supabase/functions/_shared/rate-limit'
+import { resolveSupabaseSecretKey } from '../supabase/functions/_shared/supabase-env'
+
+describe('Supabase secret-key environment resolution', () => {
+  function reader(values: Record<string, string | undefined>) {
+    return (name: string) => values[name]
+  }
+
+  it('uses the default key from the hosted key map', () => {
+    expect(resolveSupabaseSecretKey(reader({
+      SUPABASE_SECRET_KEYS: JSON.stringify({ default: 'sb_secret_hosted' }),
+      SUPABASE_SECRET_KEY: 'sb_secret_local',
+    }))).toBe('sb_secret_hosted')
+  })
+
+  it('uses the singular key in local development', () => {
+    expect(resolveSupabaseSecretKey(reader({
+      SUPABASE_SECRET_KEY: 'sb_secret_local',
+    }))).toBe('sb_secret_local')
+  })
+
+  it('rejects malformed hosted key JSON', () => {
+    expect(() => resolveSupabaseSecretKey(reader({
+      SUPABASE_SECRET_KEYS: '{bad json',
+    }))).toThrow('SUPABASE_SECRET_KEYS must be a valid JSON object')
+  })
+
+  it('rejects a hosted key map without a default key', () => {
+    expect(() => resolveSupabaseSecretKey(reader({
+      SUPABASE_SECRET_KEYS: JSON.stringify({ billing: 'sb_secret_billing' }),
+    }))).toThrow('must contain a non-empty "default" key')
+  })
+
+  it('fails closed when neither new secret variable exists', () => {
+    expect(() => resolveSupabaseSecretKey(reader({}))).toThrow(
+      'Missing SUPABASE_SECRET_KEYS or SUPABASE_SECRET_KEY',
+    )
+  })
+})
 
 // ============================================================
 // Rate limiter (auth-apikey GAP B)

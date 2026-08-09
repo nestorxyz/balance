@@ -2,6 +2,7 @@ import { useState, useRef, type FormEvent } from 'react'
 import { useCategories, type Category } from '@/hooks/use-categories'
 import { useAccounts } from '@/hooks/use-accounts'
 import { useCreateTransaction } from '@/hooks/use-create-transaction'
+import { parseMoney } from '@/lib/format'
 
 type TransactionType = 'expense' | 'income' | 'refund'
 
@@ -12,11 +13,13 @@ const TYPE_OPTIONS: { value: TransactionType; label: string }[] = [
 ]
 
 function formatWithThousands(value: number): string {
-  return value.toLocaleString('es-CL')
+  const major = Math.floor(value / 100).toLocaleString('es-CL')
+  const cents = value % 100
+  return cents ? `${major},${String(cents).padStart(2, '0')}` : major
 }
 
 function parseAmount(raw: string): number {
-  return parseInt(raw.replace(/\./g, '').replace(/,/g, ''), 10) || 0
+  try { return parseMoney(raw) } catch { return 0 }
 }
 
 function groupCategoriesByParent(categories: Category[]) {
@@ -132,7 +135,7 @@ export function QuickTransactionForm() {
               ref={amountRef}
               id="qtf-amount"
               type="text"
-              inputMode="numeric"
+              inputMode="decimal"
               value={amountDisplay}
               onChange={(e) => setAmountDisplay(e.target.value)}
               onFocus={handleAmountFocus}

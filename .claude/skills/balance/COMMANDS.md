@@ -76,6 +76,18 @@ Flags:
 - `--date YYYY-MM-DD` — default hoy.
 - `--json`
 
+## bal budget
+
+Gestiona presupuestos mensuales personales en PEN. No hay rollover automático y la coincidencia de categoría es exacta.
+
+```
+bal budget show --month YYYY-MM
+bal budget income <monto> --month YYYY-MM
+bal budget set <categoría|id> <monto> --month YYYY-MM
+bal budget remove <categoría|id> --month YYYY-MM
+bal budget copy --from YYYY-MM --to YYYY-MM [--replace]
+```
+
 Efecto en el cuadre:
 - `expense`, `income`, `refund`, `adjustment` → afectan `accumulated`.
 - `transfer`, `debt_payment` → NO afectan `accumulated` (mueven plata, no la consumen/generan).

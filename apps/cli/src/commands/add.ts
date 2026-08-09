@@ -1,5 +1,6 @@
 import type { Command } from 'commander'
-import { createTransaction } from '@balance/core'
+import { stringifyJson } from '../lib/json'
+import { createTransaction, parseMoney } from '@balance/core'
 import { getAuthedClient } from '../lib/client'
 import { fail } from '../lib/exit'
 import { formatCLP } from '../lib/format'
@@ -14,22 +15,7 @@ function isTxType(value: string): value is TxType {
 }
 
 export function parseAmount(raw: string): number {
-  const trimmed = raw.trim()
-  const sign = trimmed.startsWith('-') ? -1 : 1
-  const body = trimmed.replace(/^[-+]/, '')
-
-  let digits: string
-  if (/^\d+$/.test(body)) {
-    digits = body
-  } else if (/^\d{1,3}([.,\s_]\d{3})+$/.test(body)) {
-    digits = body.replace(/[.,\s_]/g, '')
-  } else {
-    throw new Error(`invalid amount: ${raw}`)
-  }
-
-  const n = Number.parseInt(digits, 10) * sign
-  if (!Number.isFinite(n) || n === 0) throw new Error(`invalid amount: ${raw}`)
-  return Math.abs(n)
+  return Math.abs(parseMoney(raw, { allowNegative: true }))
 }
 
 interface AddOptions {
@@ -74,7 +60,7 @@ export function registerAddCommand(program: Command): void {
       })
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify(result) + '\n')
+        process.stdout.write(stringifyJson(result) + '\n')
       } else {
         const tick = ui.positive('✓')
         const type = ui.accent(opts.type)

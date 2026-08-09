@@ -15,6 +15,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedSpaRouteImport } from './routes/_authenticated/spa'
+import { Route as AuthenticatedPresupuestoRouteImport } from './routes/_authenticated/presupuesto'
 import { Route as AuthenticatedPatrimonioRouteImport } from './routes/_authenticated/patrimonio'
 import { Route as AuthenticatedMovimientosRouteImport } from './routes/_authenticated/movimientos'
 import { Route as AuthenticatedDeudasRouteImport } from './routes/_authenticated/deudas'
@@ -50,6 +51,12 @@ const AuthenticatedSpaRoute = AuthenticatedSpaRouteImport.update({
   path: '/spa',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedPresupuestoRoute =
+  AuthenticatedPresupuestoRouteImport.update({
+    id: '/presupuesto',
+    path: '/presupuesto',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedPatrimonioRoute = AuthenticatedPatrimonioRouteImport.update({
   id: '/patrimonio',
   path: '/patrimonio',
@@ -88,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/deudas': typeof AuthenticatedDeudasRoute
   '/movimientos': typeof AuthenticatedMovimientosRoute
   '/patrimonio': typeof AuthenticatedPatrimonioRoute
+  '/presupuesto': typeof AuthenticatedPresupuestoRoute
   '/spa': typeof AuthenticatedSpaRoute
 }
 export interface FileRoutesByTo {
@@ -99,6 +107,7 @@ export interface FileRoutesByTo {
   '/deudas': typeof AuthenticatedDeudasRoute
   '/movimientos': typeof AuthenticatedMovimientosRoute
   '/patrimonio': typeof AuthenticatedPatrimonioRoute
+  '/presupuesto': typeof AuthenticatedPresupuestoRoute
   '/spa': typeof AuthenticatedSpaRoute
   '/': typeof AuthenticatedIndexRoute
 }
@@ -113,6 +122,7 @@ export interface FileRoutesById {
   '/_authenticated/deudas': typeof AuthenticatedDeudasRoute
   '/_authenticated/movimientos': typeof AuthenticatedMovimientosRoute
   '/_authenticated/patrimonio': typeof AuthenticatedPatrimonioRoute
+  '/_authenticated/presupuesto': typeof AuthenticatedPresupuestoRoute
   '/_authenticated/spa': typeof AuthenticatedSpaRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
 }
@@ -128,6 +138,7 @@ export interface FileRouteTypes {
     | '/deudas'
     | '/movimientos'
     | '/patrimonio'
+    | '/presupuesto'
     | '/spa'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -139,6 +150,7 @@ export interface FileRouteTypes {
     | '/deudas'
     | '/movimientos'
     | '/patrimonio'
+    | '/presupuesto'
     | '/spa'
     | '/'
   id:
@@ -152,6 +164,7 @@ export interface FileRouteTypes {
     | '/_authenticated/deudas'
     | '/_authenticated/movimientos'
     | '/_authenticated/patrimonio'
+    | '/_authenticated/presupuesto'
     | '/_authenticated/spa'
     | '/_authenticated/'
   fileRoutesById: FileRoutesById
@@ -207,6 +220,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSpaRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/presupuesto': {
+      id: '/_authenticated/presupuesto'
+      path: '/presupuesto'
+      fullPath: '/presupuesto'
+      preLoaderRoute: typeof AuthenticatedPresupuestoRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/patrimonio': {
       id: '/_authenticated/patrimonio'
       path: '/patrimonio'
@@ -251,6 +271,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedDeudasRoute: typeof AuthenticatedDeudasRoute
   AuthenticatedMovimientosRoute: typeof AuthenticatedMovimientosRoute
   AuthenticatedPatrimonioRoute: typeof AuthenticatedPatrimonioRoute
+  AuthenticatedPresupuestoRoute: typeof AuthenticatedPresupuestoRoute
   AuthenticatedSpaRoute: typeof AuthenticatedSpaRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
 }
@@ -261,6 +282,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDeudasRoute: AuthenticatedDeudasRoute,
   AuthenticatedMovimientosRoute: AuthenticatedMovimientosRoute,
   AuthenticatedPatrimonioRoute: AuthenticatedPatrimonioRoute,
+  AuthenticatedPresupuestoRoute: AuthenticatedPresupuestoRoute,
   AuthenticatedSpaRoute: AuthenticatedSpaRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
 }

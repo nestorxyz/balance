@@ -1,5 +1,7 @@
+import { getSupabaseSecretKey } from '../_shared/supabase-env.ts'
+
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!
-const serviceKey = Deno.env.get('AUTH_SECRET_KEY') ?? Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+const secretKey = getSupabaseSecretKey()
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -40,8 +42,7 @@ async function getFilteredSchema(): Promise<Record<string, unknown>> {
 
   const res = await fetch(`${supabaseUrl}/rest/v1/`, {
     headers: {
-      'apikey': serviceKey,
-      'Authorization': `Bearer ${serviceKey}`,
+      'apikey': secretKey,
     },
   })
 

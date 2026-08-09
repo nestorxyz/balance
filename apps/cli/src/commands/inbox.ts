@@ -1,4 +1,5 @@
 import type { Command } from 'commander'
+import { stringifyJson } from '../lib/json'
 import {
   createCategorizationRule,
   discardEmailMovement,
@@ -68,7 +69,7 @@ export function registerInboxCommand(program: Command): void {
       ])
 
       if (opts.json) {
-        process.stdout.write(JSON.stringify({ transactions: txs, staging }) + '\n')
+        process.stdout.write(stringifyJson({ transactions: txs, staging }) + '\n')
         return
       }
 

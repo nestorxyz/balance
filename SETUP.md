@@ -65,8 +65,8 @@ npm run build
 3. Note the **project ref** (the slug in the dashboard URL, e.g. `YOUR_PROJECT_REF`).
 4. From the dashboard, copy:
    - **Project URL** → `SUPABASE_URL`
-   - **anon public** key → `SUPABASE_ANON_KEY`
-   - **service_role** key → `SUPABASE_SERVICE_ROLE_KEY` (Edge Functions only — never ship to the client)
+   - **Publishable key** → `SUPABASE_PUBLISHABLE_KEY`
+   - **Secret key** → `SUPABASE_SECRET_KEY` (server-side only — never ship to the client)
 
 Link the local repo to your project:
 
@@ -166,10 +166,6 @@ Replace `<SUPABASE_URL>` and `<CRON_SECRET>` with your real values. Both endpoin
 
 ```bash
 supabase secrets set CRON_SECRET=<long-random-string>
-
-# Optional but recommended: use the new ECC-compatible auth secret key
-# (sb_secret_...) for auth-apikey instead of service_role.
-supabase secrets set AUTH_SECRET_KEY=sb_secret_xxx
 ```
 
 Confirm:
@@ -178,7 +174,7 @@ Confirm:
 supabase secrets list
 ```
 
-`SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are injected automatically — you do not set them.
+`SUPABASE_URL` and the `SUPABASE_SECRET_KEYS` JSON map are injected automatically — you do not set them.
 
 ---
 
@@ -193,11 +189,13 @@ cp .env.example .env
 ```env
 # Used by the CLI and core package
 SUPABASE_URL=https://<project-ref>.supabase.co
-SUPABASE_ANON_KEY=eyJ...
+SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
+# Used only when serving Edge Functions locally; never expose it to Vite.
+SUPABASE_SECRET_KEY=sb_secret_...
 
 # Used by the Vite web app
 VITE_SUPABASE_URL=https://<project-ref>.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJ...
+VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
 ```
 
 For Vercel deploys, set the same `VITE_*` variables in the project settings.
@@ -268,7 +266,7 @@ Authenticate and check your balance:
 
 ```bash
 export SUPABASE_URL="https://<project-ref>.supabase.co"
-export SUPABASE_ANON_KEY="<anon-key>"
+export SUPABASE_PUBLISHABLE_KEY="<publishable-key>"
 
 bal login --api-key bal_live_XXXX
 bal balance
@@ -309,7 +307,7 @@ npm test --workspace tests
 ## Troubleshooting
 
 **`error: Missing SUPABASE_URL`**
-Export `SUPABASE_URL` (and `SUPABASE_ANON_KEY`) in the same shell where you run `bal`. The CLI does **not** read `.env` automatically — that file is for `npm run dev`.
+Export `SUPABASE_URL` (and `SUPABASE_PUBLISHABLE_KEY`) in the same shell where you run `bal`. The CLI does **not** read `.env` automatically — that file is for `npm run dev`.
 
 **`login failed (401): Invalid API key`**
 Double-check the key prefix in `bal key list`. Keys starting with `bal_test_` from a different project will not match. The `auth-apikey` function rate-limits to 5 failed attempts per IP per 5 minutes.
