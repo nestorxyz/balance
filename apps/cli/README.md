@@ -135,6 +135,11 @@ due automatic charges and asks which manual ones you have paid.
 | --- | --- |
 | `bal snapshot create [--date]` | Capture a snapshot of current position (net worth, accumulated, delta). |
 | `bal snapshot list [--limit]` | Show snapshot history. |
+| `bal close check --month YYYY-MM [--json]` | Run the read-only close preflight. |
+| `bal close due [--json]` | Run the scheduled read-only preflights due today (days 28–3). |
+| `bal close month --month YYYY-MM [--yes] [--json]` | Confirm and create an immutable close or amendment. |
+| `bal close list [--limit] [--json]` | List monthly closes and revisions. |
+| `bal close show --month YYYY-MM [--revision N] [--json]` | Read one immutable close. |
 | `bal export [--format json\|csv] [--output <path>]` | Export all data. |
 
 ### Fintual integration
