@@ -18,6 +18,7 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as AuthenticatedSpaRouteImport } from './routes/_authenticated/spa'
+import { Route as AuthenticatedReportesRouteImport } from './routes/_authenticated/reportes'
 import { Route as AuthenticatedPresupuestoRouteImport } from './routes/_authenticated/presupuesto'
 import { Route as AuthenticatedPatrimonioRouteImport } from './routes/_authenticated/patrimonio'
 import { Route as AuthenticatedMovimientosRouteImport } from './routes/_authenticated/movimientos'
@@ -69,6 +70,11 @@ const AuthenticatedSpaRoute = AuthenticatedSpaRouteImport.update({
   path: '/spa',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedReportesRoute = AuthenticatedReportesRouteImport.update({
+  id: '/reportes',
+  path: '/reportes',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedPresupuestoRoute =
   AuthenticatedPresupuestoRouteImport.update({
     id: '/presupuesto',
@@ -116,6 +122,7 @@ export interface FileRoutesByFullPath {
   '/movimientos': typeof AuthenticatedMovimientosRoute
   '/patrimonio': typeof AuthenticatedPatrimonioRoute
   '/presupuesto': typeof AuthenticatedPresupuestoRoute
+  '/reportes': typeof AuthenticatedReportesRoute
   '/spa': typeof AuthenticatedSpaRoute
   '/auth/callback': typeof AuthCallbackRoute
 }
@@ -131,6 +138,7 @@ export interface FileRoutesByTo {
   '/movimientos': typeof AuthenticatedMovimientosRoute
   '/patrimonio': typeof AuthenticatedPatrimonioRoute
   '/presupuesto': typeof AuthenticatedPresupuestoRoute
+  '/reportes': typeof AuthenticatedReportesRoute
   '/spa': typeof AuthenticatedSpaRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/': typeof AuthenticatedIndexRoute
@@ -149,6 +157,7 @@ export interface FileRoutesById {
   '/_authenticated/movimientos': typeof AuthenticatedMovimientosRoute
   '/_authenticated/patrimonio': typeof AuthenticatedPatrimonioRoute
   '/_authenticated/presupuesto': typeof AuthenticatedPresupuestoRoute
+  '/_authenticated/reportes': typeof AuthenticatedReportesRoute
   '/_authenticated/spa': typeof AuthenticatedSpaRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
@@ -168,6 +177,7 @@ export interface FileRouteTypes {
     | '/movimientos'
     | '/patrimonio'
     | '/presupuesto'
+    | '/reportes'
     | '/spa'
     | '/auth/callback'
   fileRoutesByTo: FileRoutesByTo
@@ -183,6 +193,7 @@ export interface FileRouteTypes {
     | '/movimientos'
     | '/patrimonio'
     | '/presupuesto'
+    | '/reportes'
     | '/spa'
     | '/auth/callback'
     | '/'
@@ -200,6 +211,7 @@ export interface FileRouteTypes {
     | '/_authenticated/movimientos'
     | '/_authenticated/patrimonio'
     | '/_authenticated/presupuesto'
+    | '/_authenticated/reportes'
     | '/_authenticated/spa'
     | '/auth/callback'
     | '/_authenticated/'
@@ -280,6 +292,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSpaRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/reportes': {
+      id: '/_authenticated/reportes'
+      path: '/reportes'
+      fullPath: '/reportes'
+      preLoaderRoute: typeof AuthenticatedReportesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/presupuesto': {
       id: '/_authenticated/presupuesto'
       path: '/presupuesto'
@@ -332,6 +351,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedMovimientosRoute: typeof AuthenticatedMovimientosRoute
   AuthenticatedPatrimonioRoute: typeof AuthenticatedPatrimonioRoute
   AuthenticatedPresupuestoRoute: typeof AuthenticatedPresupuestoRoute
+  AuthenticatedReportesRoute: typeof AuthenticatedReportesRoute
   AuthenticatedSpaRoute: typeof AuthenticatedSpaRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
 }
@@ -343,6 +363,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedMovimientosRoute: AuthenticatedMovimientosRoute,
   AuthenticatedPatrimonioRoute: AuthenticatedPatrimonioRoute,
   AuthenticatedPresupuestoRoute: AuthenticatedPresupuestoRoute,
+  AuthenticatedReportesRoute: AuthenticatedReportesRoute,
   AuthenticatedSpaRoute: AuthenticatedSpaRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
 }
