@@ -1,6 +1,7 @@
 import { useEffect, useRef, useMemo } from 'react'
 import type { Transaction } from '@/hooks/use-transactions'
 import { useAccounts } from '@/hooks/use-accounts'
+import { useCategories } from '@/hooks/use-categories'
 import { formatMoney } from '@/lib/format'
 import { EmptyState } from '@/components/ui/empty-state'
 import { cn } from '@/lib/utils'
@@ -24,8 +25,10 @@ function getCategoryColor(category: string | null): string {
   return 'bg-zinc-400'
 }
 
-function getCategoryLabel(category: string | null): string {
+function getCategoryLabel(category: string | null, categoryMap: Map<string, string>): string {
   if (!category) return ''
+  const resolved = categoryMap.get(category)
+  if (resolved) return resolved
   const parts = category.split('.')
   return parts[parts.length - 1]?.replace(/-/g, ' ').replace(/^\w/, (c) => c.toUpperCase()) ?? ''
 }
@@ -74,6 +77,7 @@ export function TransactionList({
 }: TransactionListProps) {
   const sentinelRef = useRef<HTMLDivElement>(null)
   const accounts = useAccounts()
+  const categories = useCategories({ entity: 'personal' })
 
   const accountMap = useMemo(() => {
     const map = new Map<string, string>()
@@ -82,6 +86,14 @@ export function TransactionList({
     }
     return map
   }, [accounts.data])
+
+  const categoryMap = useMemo(() => {
+    const map = new Map<string, string>()
+    for (const category of categories.data ?? []) {
+      map.set(category.id, category.name)
+    }
+    return map
+  }, [categories.data])
 
   useEffect(() => {
     const sentinel = sentinelRef.current
@@ -142,13 +154,13 @@ export function TransactionList({
 
                 {/* Description */}
                 <span className="flex-1 text-sm truncate min-w-0">
-                  {tx.description || getCategoryLabel(tx.category)}
+                  {tx.description || getCategoryLabel(tx.category, categoryMap)}
                 </span>
 
                 {/* Category pill */}
                 <span className="hidden sm:flex items-center gap-1.5 shrink-0">
                   <span className={cn('size-1.5 rounded-full', getCategoryColor(tx.category))} />
-                  <span className="text-xs text-muted-foreground">{getCategoryLabel(tx.category)}</span>
+                  <span className="text-xs text-muted-foreground">{getCategoryLabel(tx.category, categoryMap)}</span>
                 </span>
 
                 {/* Account name */}

@@ -55,6 +55,31 @@ export { createInstallmentPurchase, payDebtInstallment, payOffDebt, getActiveDeb
 export { createTransfer, createInterEntityTransfer, receivePayment } from './transfers'
 export { createSnapshot, getSnapshotHistory } from './snapshots'
 
+export {
+  buildCashFlow,
+  buildFinancialPosition,
+  buildJournal,
+  buildLedgers,
+  buildMonthlyFinancialReport,
+  getMonthlyFinancialReport,
+  monthBounds,
+  transactionAccountEffect,
+} from './reports'
+export type {
+  AccountLedger,
+  CashFlowCategory,
+  CashFlowReport,
+  FinancialPositionItem,
+  FinancialPositionReport,
+  JournalEntry,
+  JournalLine,
+  LedgerRow,
+  MonthlyFinancialReport,
+  ReportAccount,
+  ReportCategory,
+  ReportTransaction,
+} from './reports'
+
 export { exportAllData, exportTableAsCsv, downloadBlob, serializeMoneyFields, stringifyMoneyJson } from './export'
 
 export { generateApiKey, hashApiKey } from './api-keys'

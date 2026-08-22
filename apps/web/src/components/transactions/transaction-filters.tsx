@@ -34,6 +34,7 @@ export function TransactionFiltersBar({ filters, onFiltersChange }: TransactionF
   const parsed = filters.month ? parseMonth(filters.month) : null
 
   const activeAccounts = (accounts ?? []).filter((a) => !a.is_archived && a.on_budget && a.subtype !== 'receivable' && a.subtype !== 'payable')
+  const topLevelCategories = (categories ?? []).filter((category) => category.parent_id === null)
 
   function navigateMonth(direction: -1 | 1) {
     if (!parsed) return
@@ -99,7 +100,7 @@ export function TransactionFiltersBar({ filters, onFiltersChange }: TransactionF
 
       {/* Category + type pills */}
       <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide sm:flex-wrap">
-        {categories.filter((cat) => cat.parent_id === null).map((cat) => (
+        {topLevelCategories.map((cat) => (
           <button
             key={cat.id}
             type="button"
@@ -111,6 +112,7 @@ export function TransactionFiltersBar({ filters, onFiltersChange }: TransactionF
                 : 'border-border text-muted-foreground hover:text-foreground',
             )}
           >
+            <span className="size-1.5 rounded-full bg-zinc-400" />
             {cat.name}
           </button>
         ))}
