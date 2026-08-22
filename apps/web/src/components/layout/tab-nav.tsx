@@ -8,6 +8,7 @@ const tabs = [
   { label: "Cuadrar", to: "/" as const },
   { label: "Movimientos", to: "/movimientos" as const },
   { label: "Presupuesto", to: "/presupuesto" as const },
+  { label: "Reportes", to: "/reportes" as const },
   { label: "Deudas", to: "/deudas" as const },
   { label: "SpA", to: "/spa" as const },
   { label: "Patrimonio", to: "/patrimonio" as const },
@@ -86,7 +87,7 @@ export function TabNav() {
             </div>
           </div>
         </div>
-        <nav className="flex h-11 items-center gap-0.5 px-2">
+        <nav className="flex h-11 items-center gap-0.5 overflow-x-auto px-2">
           {tabs.map((tab) => {
             const isActive =
               tab.to === "/"
@@ -98,7 +99,7 @@ export function TabNav() {
                 key={tab.to}
                 to={tab.to}
                 className={cn(
-                  "relative flex h-full flex-1 items-center justify-center px-1 text-[13px] font-medium transition-colors",
+                  "relative flex h-full min-w-[76px] flex-1 items-center justify-center px-1 text-[13px] font-medium transition-colors",
                   isActive
                     ? "text-foreground"
                     : "text-muted-foreground",
