@@ -1,6 +1,6 @@
 import type { Command } from 'commander'
 import { stringifyJson } from '../lib/json'
-import { getSupabaseUrl } from '../lib/config'
+import { getSupabasePublishableKey, getSupabaseUrl, saveBackendConfig } from '../lib/config'
 import { fail } from '../lib/exit'
 import { saveSession, type Session } from '../lib/session'
 import { ui } from '../lib/ui'
@@ -20,7 +20,9 @@ export function registerLoginCommand(program: Command): void {
       const apiKey = opts.apiKey ?? process.env.BAL_API_KEY
       if (!apiKey) fail('Missing --api-key or BAL_API_KEY env var')
 
-      const url = `${getSupabaseUrl()}/functions/v1/auth-apikey`
+      const supabaseUrl = getSupabaseUrl()
+      const publishableKey = getSupabasePublishableKey()
+      const url = `${supabaseUrl}/functions/v1/auth-apikey`
       const res = await fetch(url, {
         method: 'POST',
         headers: { 'x-api-key': apiKey },
@@ -36,6 +38,10 @@ export function registerLoginCommand(program: Command): void {
         fail('login response missing expected fields')
       }
       await saveSession(session)
+      await saveBackendConfig({
+        supabase_url: supabaseUrl,
+        supabase_publishable_key: publishableKey,
+      })
 
       if (opts.json) {
         process.stdout.write(stringifyJson({ ok: true, expires_at: session.expires_at }) + '\n')

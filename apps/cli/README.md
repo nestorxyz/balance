@@ -21,7 +21,7 @@ Requires **Node 22+**.
 ## Quickstart
 
 ```bash
-# Point the CLI at your backend
+# Point the CLI at your backend for the initial login
 export SUPABASE_URL="https://<project-ref>.supabase.co"
 export SUPABASE_PUBLISHABLE_KEY="<publishable-key>"
 
@@ -32,7 +32,19 @@ bal login --api-key bal_live_XXXXXXXXXXXXXXXX
 bal balance
 ```
 
-The session is cached at `~/.balance/session.json` (mode `0600`) and refreshed automatically on every command.
+The initial login stores the backend URL and publishable key in
+`~/.balance/config.json`, and caches the session in `~/.balance/session.json`.
+Both files use mode `0600`. Subsequent `bal` commands work from any directory
+without re-exporting the backend variables. The plaintext `bal_...` API key is
+not stored in either file.
+
+To install the CLI directly from a local checkout instead of npm:
+
+```bash
+npm run build --workspace apps/cli
+npm pack --workspace apps/cli --pack-destination /tmp
+npm install -g /tmp/dreamxist-bal-cli-*.tgz
+```
 
 ## Commands
 

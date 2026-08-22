@@ -23,6 +23,7 @@ import { registerSyncCommand } from './commands/sync'
 import { registerSpaCommand } from './commands/spa'
 import { registerTransferCommand } from './commands/transfer'
 import { registerUndoCommand } from './commands/undo'
+import { loadBackendConfigIntoEnv } from './lib/config'
 
 const require = createRequire(import.meta.url)
 const { version } = require('../package.json') as { version: string }
@@ -58,6 +59,7 @@ registerSpaCommand(program)
 registerPatrimonioCommand(program)
 
 async function main(): Promise<void> {
+  loadBackendConfigIntoEnv()
   if (process.argv.length <= 2) {
     process.stdout.write(await renderBanner())
     return
