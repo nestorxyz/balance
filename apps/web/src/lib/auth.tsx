@@ -7,7 +7,8 @@ interface AuthContextValue {
   session: Session | null
   loading: boolean
   signIn: (input: { email: string; password: string }) => Promise<void>
-  signUp: (input: { email: string; password: string }) => Promise<{ confirmEmail: boolean }>
+  requestPasswordReset: (email: string) => Promise<void>
+  updatePassword: (password: string) => Promise<void>
   signOut: () => Promise<void>
 }
 
@@ -49,18 +50,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(data.user)
   }, [])
 
-  const signUp = useCallback(async (input: { email: string; password: string }) => {
-    const { data, error } = await supabase.auth.signUp({
-      email: input.email,
-      password: input.password,
+  const requestPasswordReset = useCallback(async (email: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/callback?next=/reset-password`,
     })
     if (error) throw error
-    const confirmEmail = !data.session
-    if (data.session) {
-      setSession(data.session)
-      setUser(data.user)
-    }
-    return { confirmEmail }
+  }, [])
+
+  const updatePassword = useCallback(async (password: string) => {
+    const { error } = await supabase.auth.updateUser({ password })
+    if (error) throw error
   }, [])
 
   const signOut = useCallback(async () => {
@@ -71,7 +70,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   return (
-    <AuthContext value={{ user, session, loading, signIn, signUp, signOut }}>
+    <AuthContext value={{ user, session, loading, signIn, requestPasswordReset, updatePassword, signOut }}>
       {children}
     </AuthContext>
   )
