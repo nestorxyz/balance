@@ -202,20 +202,23 @@ For Vercel deploys, set the same `VITE_*` variables in the project settings.
 
 ---
 
-## Step 7 — Create your user account
+## Step 7 — Provision the owner account
 
-Balance uses Supabase Auth. The simplest way to get an account is the web app's signup form:
+Balance is configured as a private instance. Public signup must remain disabled.
+Create the owner from the Supabase dashboard before starting the web app:
 
 ```bash
 npm run dev:web
 ```
 
-1. Open <http://localhost:5173>.
-2. Sign up with email + password (email confirmations are off by default — see `supabase/config.toml`).
-3. Log in once so a row is created in `public.profiles`.
+1. In Supabase, open Authentication → Users → "Add user".
+2. Create only the intended owner account.
+3. Open <http://localhost:5173> and log in once so a row is created in `public.profiles`.
 4. Complete onboarding (initial accounts, opening balances).
 
-Alternatively, create the user from the Supabase dashboard (Authentication → Users → "Add user") and log in once via the web app to trigger profile creation.
+Keep `[auth].enable_signup = false`. `[auth.email].enable_signup = true` keeps
+email login and password recovery available for existing users; it does not
+re-open global signup.
 
 ---
 

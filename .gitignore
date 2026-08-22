@@ -31,3 +31,4 @@ bun.lock
 
 # Internal planning docs — cifras reales, infra e identificadores de nube
 docs/prd-*.md
+.env*

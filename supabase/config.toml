@@ -3,7 +3,7 @@ project_id = "balance-app"
 [api]
 enabled = true
 port = 54321
-schemas = ["public"]
+schemas = ["public", "graphql_public"]
 
 [db]
 port = 54322
@@ -13,14 +13,24 @@ major_version = 17
 enabled = true
 port = 54323
 
+[storage.vector]
+enabled = false
+
 [auth]
 enabled = true
-site_url = "http://localhost:5173"
-additional_redirect_urls = ["http://localhost:5173"]
+site_url = "https://balance-puce-ten.vercel.app"
+additional_redirect_urls = ["https://balance-puce-ten.vercel.app", "http://localhost:5173"]
+enable_signup = false
 
 [auth.email]
 enable_signup = true
-enable_confirmations = false
+enable_confirmations = true
+max_frequency = "1m"
+otp_length = 8
+
+[auth.mfa.totp]
+enroll_enabled = true
+verify_enabled = true
 
 # Edge functions enabled via Supabase dashboard
 # Cron for daily-charges configured via Supabase dashboard (pg_cron)

@@ -85,10 +85,13 @@ function LoginPage() {
         </div>
 
         <p className="text-center text-sm text-muted-foreground">
-          No tienes cuenta?{' '}
-          <Link to="/signup" className="text-foreground underline underline-offset-4 hover:text-foreground/80">
-            Crear cuenta
+          <Link to="/forgot-password" className="text-foreground underline underline-offset-4 hover:text-foreground/80">
+            Olvide mi password
           </Link>
+        </p>
+
+        <p className="text-center text-sm text-muted-foreground">
+          El registro de cuentas esta cerrado.
         </p>
       </div>
     </div>
