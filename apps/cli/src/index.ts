@@ -6,6 +6,7 @@ import { registerBalanceCommand } from './commands/balance'
 import { renderBanner } from './commands/banner'
 import { registerBucketsCommand } from './commands/buckets'
 import { registerCategoryCommand } from './commands/category'
+import { registerCloseCommand } from './commands/close'
 import { registerDebtCommand } from './commands/debt'
 import { registerExportCommand } from './commands/export'
 import { registerFintualCommand } from './commands/fintual'
@@ -50,6 +51,7 @@ registerAccountCommand(program)
 registerDebtCommand(program)
 registerReceivableCommand(program)
 registerCategoryCommand(program)
+registerCloseCommand(program)
 registerBudgetCommand(program)
 registerRecurringCommand(program)
 registerSnapshotCommand(program)

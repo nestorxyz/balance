@@ -38,7 +38,12 @@ export function periodRange(period: Period, now: Date = new Date()): { start: st
 }
 
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}$/
+const YEAR_MONTH_RE = /^\d{4}-(0[1-9]|1[0-2])$/
 
 export function isIsoDate(value: string): boolean {
   return ISO_DATE_RE.test(value)
+}
+
+export function isYearMonth(value: string): boolean {
+  return YEAR_MONTH_RE.test(value)
 }

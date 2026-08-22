@@ -54,6 +54,15 @@ export type { MonthlyBudget, BudgetCategory } from './budgets'
 export { createInstallmentPurchase, payDebtInstallment, payOffDebt, getActiveDebts, archiveDebt } from './debts'
 export { createTransfer, createInterEntityTransfer, receivePayment } from './transfers'
 export { createSnapshot, getSnapshotHistory } from './snapshots'
+export {
+  closeMonth,
+  createMonthClose,
+  getMonthClose,
+  getMonthCloseHistory,
+  getMonthClosePreflight,
+  scheduledCloseMonths,
+} from './monthly-closes'
+export type { MonthClose, MonthCloseCheck, MonthClosePreflight, MonthCloseSummary } from './monthly-closes'
 
 export {
   buildCashFlow,

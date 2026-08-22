@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { FinancialReports } from '@/components/reports/financial-reports'
+import { MonthClosePanel } from '@/components/reports/month-close-panel'
 import { useFinancialReport } from '@/hooks/use-financial-report'
 import { Skeleton } from '@/components/ui/skeleton'
 
@@ -67,6 +68,7 @@ function ReportsPage() {
         </div>
       )}
       {report.data && <FinancialReports key={month} report={report.data} />}
+      <MonthClosePanel month={month} />
     </div>
   )
 }
