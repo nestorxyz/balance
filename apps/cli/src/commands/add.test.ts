@@ -15,6 +15,8 @@ describe('parseAmount', () => {
     expect(parseAmount('8,000')).toBe(800000)
     expect(parseAmount('8.50')).toBe(850)
     expect(parseAmount('8,50')).toBe(850)
+    expect(parseAmount('166.35')).toBe(16635)
+    expect(parseAmount('9.60')).toBe(960)
   })
 
   it('returns absolute value for negatives', () => {
