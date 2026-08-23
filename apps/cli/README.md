@@ -166,7 +166,7 @@ Chilean tax notes: foreign SaaS purchases use `bal spa gasto` (expense, no VAT c
 
 ### Conventions
 
-- **Amount parsing**: plain integers (`12000`) or thousand-separated (`12.000`, `12,000`, `12 000`, `12_000`). All money is stored as integers (CLP in pesos, USD in cents). No decimals.
+- **Amount parsing**: plain integers (`12000`), thousand-separated (`12.000`, `12,000`), or amounts with up to two decimal places (`166.35`, `166,35`, `1.234,56`, `1,234.56`). Money is stored internally as integer minor units, so decimal input stays exact.
 - **Account selection**: `--account` accepts UUID or a substring of the name (case-insensitive fuzzy match). Ambiguous matches error out.
 - **JSON output**: every read command accepts `--json` for machine-readable output. Useful for piping into `jq`, scripts, or other tools.
 - **Transaction immutability**: transactions are never updated or deleted. Corrections use `bal undo` (creates a compensating adjustment).

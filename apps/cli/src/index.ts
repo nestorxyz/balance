@@ -25,6 +25,7 @@ import { registerSpaCommand } from './commands/spa'
 import { registerTransferCommand } from './commands/transfer'
 import { registerUndoCommand } from './commands/undo'
 import { loadBackendConfigIntoEnv } from './lib/config'
+import { formatError } from './lib/exit'
 
 const require = createRequire(import.meta.url)
 const { version } = require('../package.json') as { version: string }
@@ -70,7 +71,6 @@ async function main(): Promise<void> {
 }
 
 main().catch((err: unknown) => {
-  const message = err instanceof Error ? err.message : String(err)
-  process.stderr.write(`error: ${message}\n`)
+  process.stderr.write(`error: ${formatError(err)}\n`)
   process.exit(1)
 })
