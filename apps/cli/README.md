@@ -99,7 +99,7 @@ npm install -g /tmp/dreamxist-bal-cli-*.tgz
 | Command | Description |
 | --- | --- |
 | `bal category list [--entity]` | List categories. |
-| `bal category create <name>` | Create a top-level personal category. |
+| `bal category create <name> [--parent <id>]` | Create a top-level personal category or a subcategory under an exact parent id. |
 | `bal category rename <id> <new-name>` | Rename a category. |
 | `bal category delete <id>` | Delete a category (fails if referenced by transactions). |
 

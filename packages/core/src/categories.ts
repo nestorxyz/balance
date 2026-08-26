@@ -29,12 +29,12 @@ export async function archiveCategory(supabase: TypedClient, categoryId: string)
 
 export async function createSubcategory(supabase: TypedClient, input: {
   parentId: string
-  id: string
+  id?: string
   name: string
 }) {
   const { data, error } = await supabase.rpc('create_subcategory', {
     p_parent_id: input.parentId,
-    p_id: input.id,
+    p_id: input.id ?? `custom.${crypto.randomUUID()}`,
     p_name: input.name,
   })
   if (error) throw error

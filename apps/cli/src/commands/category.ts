@@ -1,6 +1,6 @@
 import type { Command } from 'commander'
 import { stringifyJson } from '../lib/json'
-import { createTopLevelCategory, deleteCategory, getCategories, renameCategory } from '@balance/core'
+import { createSubcategory, createTopLevelCategory, deleteCategory, getCategories, renameCategory } from '@balance/core'
 import { getAuthedClient } from '../lib/client'
 import { fail } from '../lib/exit'
 import { padRight } from '../lib/format'
@@ -56,22 +56,26 @@ function registerList(group: Command): void {
 }
 
 interface CreateOptions {
+  parent?: string
   json?: boolean
 }
 
 function registerCreate(group: Command): void {
   group
     .command('create <name>')
-    .description('Create a top-level personal category')
+    .description('Create a personal category')
+    .option('--parent <id>', 'create a subcategory under this parent category id')
     .option('--json', 'output JSON')
     .action(async (name: string, opts: CreateOptions) => {
       const client = await getAuthedClient()
-      const result = await createTopLevelCategory(client, name)
+      const result = opts.parent
+        ? await createSubcategory(client, { parentId: opts.parent, name })
+        : await createTopLevelCategory(client, name)
 
       if (opts.json) {
         process.stdout.write(stringifyJson(result) + '\n')
       } else {
-        process.stdout.write(`Created personal category "${name}"\n`)
+        process.stdout.write(`Created personal ${opts.parent ? 'subcategory' : 'category'} "${name}"\n`)
       }
     })
 }

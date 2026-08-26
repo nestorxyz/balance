@@ -16,7 +16,7 @@ async function categoryId(client: Awaited<ReturnType<typeof getAuthedClient>>, v
   const categories = await getCategories(client, { entity: 'personal' })
   const exactId = categories.find((c) => c.id === value)
   if (exactId) return exactId.id
-  const matches = categories.filter((c) => c.parent_id === null && c.name.localeCompare(value, undefined, { sensitivity: 'accent' }) === 0)
+  const matches = categories.filter((c) => c.name.localeCompare(value, undefined, { sensitivity: 'accent' }) === 0)
   if (matches.length !== 1) fail(matches.length ? `ambiguous category: ${value}; use its id` : `category not found: ${value}`)
   return matches[0]!.id
 }

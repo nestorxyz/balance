@@ -51,7 +51,15 @@ export async function getTransactions(supabase: TypedClient, options?: {
 }) {
   let query = supabase.from('transactions').select('*').order('date', { ascending: false })
   if (options?.accountId) query = query.eq('account_id', options.accountId)
-  if (options?.category) query = query.eq('category', options.category)
+  if (options?.category) {
+    const { data: children, error: categoryError } = await supabase
+      .from('categories')
+      .select('id')
+      .eq('parent_id', options.category)
+      .eq('is_archived' as never, false)
+    if (categoryError) throw categoryError
+    query = query.in('category', [options.category, ...(children ?? []).map((child) => child.id)])
+  }
   if (options?.types && options.types.length > 0) {
     query = query.in('type', options.types as ('income' | 'expense' | 'refund' | 'transfer' | 'debt_payment' | 'adjustment')[])
   } else if (options?.type) {
