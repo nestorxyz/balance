@@ -10,6 +10,16 @@ export interface BudgetCategory {
   spent: number
   remaining: number
   percentage_used: number
+  children: BudgetSubcategory[]
+}
+
+export interface BudgetSubcategory {
+  category_id: string
+  name: string
+  target: number | null
+  spent: number
+  remaining: number | null
+  percentage_used: number | null
 }
 
 export interface MonthlyBudget {
