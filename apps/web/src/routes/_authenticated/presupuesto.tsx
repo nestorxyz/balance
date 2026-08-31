@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ReservedContributions } from '@/components/contributions/reserved-contributions'
 import { createFileRoute } from '@tanstack/react-router'
 import { createSubcategory, createTopLevelCategory, parseMoney } from '@balance/core'
 import { useBudget, useBudgetMutations } from '@/hooks/use-budget'
@@ -26,6 +27,7 @@ function BudgetPage() {
   const previous=shiftMonth(month,-1)
   async function copyPrevious() { try { await mutations.copy.mutateAsync({from:previous,replace:false}) } catch { if (window.confirm('Este mes ya tiene datos. ¿Reemplazarlos?')) mutations.copy.mutate({from:previous,replace:true}) } }
   return <div className="space-y-6">
+    <ReservedContributions />
     <div className="flex items-center justify-between"><h1 className="text-xl font-semibold">Presupuesto</h1><div className="flex items-center gap-2"><button onClick={()=>setMonth(shiftMonth(month,-1))}>‹</button><input type="month" value={month} onChange={e=>setMonth(e.target.value)}/><button onClick={()=>setMonth(shiftMonth(month,1))}>›</button></div></div>
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
       <Summary label="Disponible real" value={budget.data?.actual_available}/><Summary label="Disponible planificado" value={budget.data?.planned_available}/><Summary label="Ingreso real" value={budget.data?.actual_income}/><Summary label="Asignado" value={budget.data?.total_allocated}/>

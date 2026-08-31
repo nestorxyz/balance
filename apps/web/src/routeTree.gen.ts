@@ -24,6 +24,7 @@ import { Route as AuthenticatedPatrimonioRouteImport } from './routes/_authentic
 import { Route as AuthenticatedMovimientosRouteImport } from './routes/_authenticated/movimientos'
 import { Route as AuthenticatedDeudasRouteImport } from './routes/_authenticated/deudas'
 import { Route as AuthenticatedConfiguracionRouteImport } from './routes/_authenticated/configuracion'
+import { Route as AuthenticatedAportesRouteImport } from './routes/_authenticated/aportes'
 import { Route as AuthenticatedApiRouteImport } from './routes/_authenticated/api'
 
 const SignupRoute = SignupRouteImport.update({
@@ -103,6 +104,11 @@ const AuthenticatedConfiguracionRoute =
     path: '/configuracion',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedAportesRoute = AuthenticatedAportesRouteImport.update({
+  id: '/aportes',
+  path: '/aportes',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedApiRoute = AuthenticatedApiRouteImport.update({
   id: '/api',
   path: '/api',
@@ -117,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/api': typeof AuthenticatedApiRoute
+  '/aportes': typeof AuthenticatedAportesRoute
   '/configuracion': typeof AuthenticatedConfiguracionRoute
   '/deudas': typeof AuthenticatedDeudasRoute
   '/movimientos': typeof AuthenticatedMovimientosRoute
@@ -133,6 +140,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/api': typeof AuthenticatedApiRoute
+  '/aportes': typeof AuthenticatedAportesRoute
   '/configuracion': typeof AuthenticatedConfiguracionRoute
   '/deudas': typeof AuthenticatedDeudasRoute
   '/movimientos': typeof AuthenticatedMovimientosRoute
@@ -152,6 +160,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/_authenticated/api': typeof AuthenticatedApiRoute
+  '/_authenticated/aportes': typeof AuthenticatedAportesRoute
   '/_authenticated/configuracion': typeof AuthenticatedConfiguracionRoute
   '/_authenticated/deudas': typeof AuthenticatedDeudasRoute
   '/_authenticated/movimientos': typeof AuthenticatedMovimientosRoute
@@ -172,6 +181,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/api'
+    | '/aportes'
     | '/configuracion'
     | '/deudas'
     | '/movimientos'
@@ -188,6 +198,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/api'
+    | '/aportes'
     | '/configuracion'
     | '/deudas'
     | '/movimientos'
@@ -206,6 +217,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/_authenticated/api'
+    | '/_authenticated/aportes'
     | '/_authenticated/configuracion'
     | '/_authenticated/deudas'
     | '/_authenticated/movimientos'
@@ -334,6 +346,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedConfiguracionRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/aportes': {
+      id: '/_authenticated/aportes'
+      path: '/aportes'
+      fullPath: '/aportes'
+      preLoaderRoute: typeof AuthenticatedAportesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/api': {
       id: '/_authenticated/api'
       path: '/api'
@@ -346,6 +365,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteChildren {
   AuthenticatedApiRoute: typeof AuthenticatedApiRoute
+  AuthenticatedAportesRoute: typeof AuthenticatedAportesRoute
   AuthenticatedConfiguracionRoute: typeof AuthenticatedConfiguracionRoute
   AuthenticatedDeudasRoute: typeof AuthenticatedDeudasRoute
   AuthenticatedMovimientosRoute: typeof AuthenticatedMovimientosRoute
@@ -358,6 +378,7 @@ interface AuthenticatedRouteChildren {
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedApiRoute: AuthenticatedApiRoute,
+  AuthenticatedAportesRoute: AuthenticatedAportesRoute,
   AuthenticatedConfiguracionRoute: AuthenticatedConfiguracionRoute,
   AuthenticatedDeudasRoute: AuthenticatedDeudasRoute,
   AuthenticatedMovimientosRoute: AuthenticatedMovimientosRoute,

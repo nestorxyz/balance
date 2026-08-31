@@ -4,9 +4,6 @@ import { moneyToDecimal } from './money'
 
 type TypedClient = SupabaseClient<Database>
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type UntypedClient = SupabaseClient<any>
-
 interface ExportData {
   exported_at: string
   tables: {
@@ -16,6 +13,8 @@ interface ExportData {
     categories: Record<string, unknown>[]
     snapshots: Record<string, unknown>[]
     recurring_charges: Record<string, unknown>[]
+    shared_contributions: Record<string, unknown>[]
+    contribution_events: Record<string, unknown>[]
   }
 }
 
@@ -23,19 +22,18 @@ export async function exportAllData(client: TypedClient): Promise<ExportData> {
   const { data: { user } } = await client.auth.getUser()
   if (!user) throw new Error('No authenticated user')
 
-  // recurring_charges not in generated types yet, use untyped client for that table
-  const untyped = client as UntypedClient
-
-  const [accounts, transactions, debts, categories, snapshots, recurring] = await Promise.all([
+  const [accounts, transactions, debts, categories, snapshots, recurring, contributions, contributionEvents] = await Promise.all([
     client.from('accounts').select('*'),
     client.from('transactions').select('*').order('date', { ascending: false }),
     client.from('debts').select('*'),
     client.from('categories').select('*').or(`user_id.eq.${user.id},user_id.is.null`),
     client.from('snapshots').select('*'),
-    untyped.from('recurring_charges').select('*'),
+    client.from('recurring_charges').select('*'),
+    client.from('shared_contributions').select('*'),
+    client.from('contribution_events').select('*'),
   ])
 
-  const results = [accounts, transactions, debts, categories, snapshots, recurring]
+  const results = [accounts, transactions, debts, categories, snapshots, recurring, contributions, contributionEvents]
   for (const result of results) {
     if (result.error) throw new Error(`Export failed: ${(result.error as { message: string }).message}`)
   }
@@ -49,12 +47,14 @@ export async function exportAllData(client: TypedClient): Promise<ExportData> {
       categories: (categories.data ?? []) as Record<string, unknown>[],
       snapshots: (snapshots.data ?? []) as Record<string, unknown>[],
       recurring_charges: (recurring.data ?? []) as Record<string, unknown>[],
+      shared_contributions: (contributions.data ?? []) as Record<string, unknown>[],
+      contribution_events: (contributionEvents.data ?? []) as Record<string, unknown>[],
     },
   }
 }
 
 const MONEY_FIELDS = new Set([
-  'amount', 'balance', 'credit_limit', 'total_amount', 'installment_amount',
+  'amount', 'bill_amount', 'balance', 'credit_limit', 'total_amount', 'installment_amount',
   'last_installment_amount', 'remaining_amount', 'statement_balance',
   'net_worth', 'position', 'accumulated', 'delta', 'net', 'neto', 'iva',
   'paid_amount', 'f29_total', 'monthly_income', 'monthly_expenses',

@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { ReservedContributions } from '@/components/contributions/reserved-contributions'
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { EmptyState } from '@/components/ui/empty-state'
 import { BentoGrid } from '@/components/layout/app-shell'
@@ -88,6 +89,7 @@ function DashboardPage() {
 
   return (
     <div className="space-y-4 md:space-y-6">
+      <ReservedContributions />
       <BentoGrid>
         <PatrimonyHero
           position={position}

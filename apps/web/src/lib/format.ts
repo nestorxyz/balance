@@ -1,4 +1,9 @@
 export { formatMoney, parseMoney, moneyToDecimal } from '@balance/core'
+import { formatMoney } from '@balance/core'
+
+export function formatSoles(minorUnits: number): string {
+  return formatMoney(minorUnits, 'PEN', 'es-PE')
+}
 
 export function formatCurrency(minorAmount: number, currency: string = 'PEN'): string {
   const locale = currency === 'PEN' ? 'es-PE' : currency === 'USD' ? 'en-US' : 'es-CL'

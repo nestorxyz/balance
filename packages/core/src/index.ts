@@ -1,4 +1,6 @@
 export { createSupabaseClient } from './supabase'
+export { getSharedContributions, createSharedContribution, actOnContribution, contributionReminder, contributionReserved, financeToday } from './contributions'
+export type { SharedContribution, ContributionEvent, CreateContributionInput, ContributionActionInput, ContributionAction } from './contributions'
 export type { SupabaseClient, Database } from './supabase'
 
 export { createAccount, getAccounts, archiveAccount, renameAccount, updateAccountBalance } from './accounts'

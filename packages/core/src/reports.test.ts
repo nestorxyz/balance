@@ -31,6 +31,29 @@ function tx(input: Partial<ReportTransaction> & Pick<ReportTransaction, 'id' | '
 }
 
 describe('monthly financial reports', () => {
+  it('applies refunds as positive account effects and reverses expense journal lines', () => {
+    const holding: ReportAccount = { id: 'holding', name: 'Anticipo', type: 'liability', subtype: 'payable', currency: 'PEN', on_budget: true, is_archived: false }
+    const transactions = [
+      tx({id:'initial',account_id:'yape',type:'income',amount:50000,date:'2026-07-01',category:'income'}),
+      tx({id:'received',account_id:'yape',type:'transfer',amount:3000,date:'2026-07-25',transfer_to:'holding'}),
+      tx({id:'reserved',account_id:'holding',type:'transfer',amount:-3000,date:'2026-07-25',transfer_to:'yape'}),
+      tx({id:'bill',account_id:'yape',type:'expense',amount:10000,category:'food'}),
+      tx({id:'applied',account_id:'holding',type:'refund',amount:3000,category:'food'}),
+    ]
+    const report = buildMonthlyFinancialReport({ month:'2026-08',transactions,accounts:[...accounts,holding],categories })
+    expect(report.ledgers.find(l=>l.account.id==='holding')).toMatchObject({openingBalance:-3000,closingBalance:0})
+    expect(report.position.netWorth).toBe(43000)
+    expect(report.position.totalLiabilities).toBe(0)
+    expect(report.cashFlow.totalExpenses).toBe(7000)
+    expect(report.journal.find(j=>j.id==='applied')?.lines).toEqual([
+      {account:'Anticipo',debit:3000,credit:0},
+      {account:'Alimentación',debit:0,credit:3000},
+    ])
+    const cashRefund = buildMonthlyFinancialReport({month:'2026-08',accounts,categories,transactions:[
+      tx({id:'refund',account_id:'yape',type:'refund',amount:8000,category:'food'}),
+    ]})
+    expect(cashRefund.position.totalAssets).toBe(8000)
+  })
   it('validates and calculates calendar month bounds', () => {
     expect(monthBounds('2026-02')).toEqual({ start: '2026-02-01', end: '2026-02-28' })
     expect(() => monthBounds('2026-13')).toThrow('Invalid report month')
