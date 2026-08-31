@@ -8,6 +8,7 @@ const tabs = [
   { label: "Cuadrar", to: "/" as const },
   { label: "Movimientos", to: "/movimientos" as const },
   { label: "Presupuesto", to: "/presupuesto" as const },
+  { label: "Aportes", to: "/aportes" as const },
   { label: "Reportes", to: "/reportes" as const },
   { label: "Deudas", to: "/deudas" as const },
   { label: "SpA", to: "/spa" as const },

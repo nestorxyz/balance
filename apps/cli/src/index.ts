@@ -1,5 +1,6 @@
 import { createRequire } from 'node:module'
 import { Command } from 'commander'
+import { registerContributionCommand } from './commands/contribution'
 import { registerAccountCommand } from './commands/account'
 import { registerAddCommand } from './commands/add'
 import { registerBalanceCommand } from './commands/balance'
@@ -38,6 +39,7 @@ program
   .version(version)
 
 registerLoginCommand(program)
+registerContributionCommand(program)
 registerKeyCommand(program)
 registerAddCommand(program)
 registerBalanceCommand(program)

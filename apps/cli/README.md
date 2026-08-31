@@ -90,6 +90,11 @@ npm install -g /tmp/dreamxist-bal-cli-*.tgz
 
 ### Receivables
 
+Shared expense advances use `bal contribution`: see
+[the workflow and confirmation gates](../../../docs/shared-contributions.md).
+`contribution list --due --json` is read-only; financial actions require `--yes`,
+an explicit account/date, and a stable `--request-id` for safe retries.
+
 | Command | Description |
 | --- | --- |
 | `bal receivable pay <receivable> <amount> --to <account>` | Record a payment received from a receivable. |

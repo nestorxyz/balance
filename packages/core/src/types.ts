@@ -126,10 +126,83 @@ export type Database = {
         }
         Relationships: []
       }
+      budget_plans: {
+        Row: {
+          created_at: string
+          currency: string
+          id: string
+          month: string
+          planned_income: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          id?: string
+          month: string
+          planned_income?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          id?: string
+          month?: string
+          planned_income?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      budget_targets: {
+        Row: {
+          amount: number
+          category_id: string
+          created_at: string
+          id: string
+          plan_id: string
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          category_id: string
+          created_at?: string
+          id?: string
+          plan_id: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          category_id?: string
+          created_at?: string
+          id?: string
+          plan_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "budget_targets_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "budget_targets_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "budget_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       categories: {
         Row: {
           entity: Database["public"]["Enums"]["entity_type"]
           id: string
+          is_archived: boolean
           name: string
           parent_id: string | null
           sort_order: number
@@ -138,6 +211,7 @@ export type Database = {
         Insert: {
           entity?: Database["public"]["Enums"]["entity_type"]
           id: string
+          is_archived?: boolean
           name: string
           parent_id?: string | null
           sort_order?: number
@@ -146,6 +220,7 @@ export type Database = {
         Update: {
           entity?: Database["public"]["Enums"]["entity_type"]
           id?: string
+          is_archived?: boolean
           name?: string
           parent_id?: string | null
           sort_order?: number
@@ -192,6 +267,64 @@ export type Database = {
             columns: ["category"]
             isOneToOne: false
             referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contribution_events: {
+        Row: {
+          account_id: string | null
+          action: string
+          bill_amount: number | null
+          contribution_id: string
+          created_at: string
+          date: string
+          id: string
+          transaction_ids: string[]
+          user_id: string
+        }
+        Insert: {
+          account_id?: string | null
+          action: string
+          bill_amount?: number | null
+          contribution_id: string
+          created_at?: string
+          date: string
+          id: string
+          transaction_ids?: string[]
+          user_id: string
+        }
+        Update: {
+          account_id?: string | null
+          action?: string
+          bill_amount?: number | null
+          contribution_id?: string
+          created_at?: string
+          date?: string
+          id?: string
+          transaction_ids?: string[]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contribution_events_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contribution_events_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "credit_card_status"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contribution_events_contribution_id_fkey"
+            columns: ["contribution_id"]
+            isOneToOne: false
+            referencedRelation: "shared_contributions"
             referencedColumns: ["id"]
           },
         ]
@@ -373,6 +506,45 @@ export type Database = {
         }
         Relationships: []
       }
+      monthly_closes: {
+        Row: {
+          closed_at: string
+          id: string
+          period: string
+          preflight: Json
+          report_payload: Json
+          revision: number
+          source_data: Json
+          transaction_count: number
+          transaction_fingerprint: string
+          user_id: string
+        }
+        Insert: {
+          closed_at?: string
+          id?: string
+          period: string
+          preflight: Json
+          report_payload: Json
+          revision: number
+          source_data: Json
+          transaction_count: number
+          transaction_fingerprint: string
+          user_id: string
+        }
+        Update: {
+          closed_at?: string
+          id?: string
+          period?: string
+          preflight?: Json
+          report_payload?: Json
+          revision?: number
+          source_data?: Json
+          transaction_count?: number
+          transaction_fingerprint?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -461,6 +633,73 @@ export type Database = {
             foreignKeyName: "recurring_charges_account_id_fkey"
             columns: ["account_id"]
             isOneToOne: false
+            referencedRelation: "credit_card_status"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shared_contributions: {
+        Row: {
+          amount: number
+          category_id: string
+          contributor: string
+          created_at: string
+          description: string
+          due_date: string
+          id: string
+          liability_account_id: string
+          notice_date: string
+          received_date: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          category_id: string
+          contributor: string
+          created_at?: string
+          description: string
+          due_date: string
+          id: string
+          liability_account_id: string
+          notice_date: string
+          received_date?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          category_id?: string
+          contributor?: string
+          created_at?: string
+          description?: string
+          due_date?: string
+          id?: string
+          liability_account_id?: string
+          notice_date?: string
+          received_date?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shared_contributions_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shared_contributions_liability_account_id_fkey"
+            columns: ["liability_account_id"]
+            isOneToOne: true
+            referencedRelation: "accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shared_contributions_liability_account_id_fkey"
+            columns: ["liability_account_id"]
+            isOneToOne: true
             referencedRelation: "credit_card_status"
             referencedColumns: ["id"]
           },
@@ -661,36 +900,6 @@ export type Database = {
         }
         Relationships: []
       }
-      transaction_groups: {
-        Row: {
-          created_at: string
-          entity: Database["public"]["Enums"]["entity_type"]
-          id: string
-          is_archived: boolean
-          name: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          entity?: Database["public"]["Enums"]["entity_type"]
-          id?: string
-          is_archived?: boolean
-          name: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          entity?: Database["public"]["Enums"]["entity_type"]
-          id?: string
-          is_archived?: boolean
-          name?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       transactions: {
         Row: {
           account_id: string
@@ -701,7 +910,6 @@ export type Database = {
           debt_id: string | null
           description: string
           entity: Database["public"]["Enums"]["entity_type"]
-          group_id: string | null
           id: string
           linked_invoice_id: string | null
           metadata: Json | null
@@ -719,7 +927,6 @@ export type Database = {
           debt_id?: string | null
           description: string
           entity?: Database["public"]["Enums"]["entity_type"]
-          group_id?: string | null
           id?: string
           linked_invoice_id?: string | null
           metadata?: Json | null
@@ -737,7 +944,6 @@ export type Database = {
           debt_id?: string | null
           description?: string
           entity?: Database["public"]["Enums"]["entity_type"]
-          group_id?: string | null
           id?: string
           linked_invoice_id?: string | null
           metadata?: Json | null
@@ -747,13 +953,6 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "transactions_group_id_fkey"
-            columns: ["group_id"]
-            isOneToOne: false
-            referencedRelation: "transaction_groups"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "fk_transactions_debt"
             columns: ["debt_id"]
@@ -991,6 +1190,24 @@ export type Database = {
         Returns: Json
       }
       _bucket_root: { Args: { p_category: string }; Returns: string }
+      _contribution_post: {
+        Args: {
+          p_account: string
+          p_amount: number
+          p_category: string
+          p_date: string
+          p_delta: number
+          p_description: string
+          p_peer?: string
+          p_row: Database["public"]["Tables"]["shared_contributions"]["Row"]
+          p_type: Database["public"]["Enums"]["transaction_type"]
+        }
+        Returns: string
+      }
+      _counterparty_is_owner: {
+        Args: { p_counterparty: string; p_user_id: string }
+        Returns: boolean
+      }
       _create_debt: {
         Args: {
           p_account_id: string
@@ -1090,6 +1307,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      _undo_transaction_before_contributions: {
+        Args: { p_transaction_id: string }
+        Returns: Json
+      }
       _update_account_balance: {
         Args: { p_account_id: string; p_delta: number }
         Returns: {
@@ -1111,6 +1332,33 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "accounts"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      act_on_contribution: {
+        Args: {
+          p_account_id?: string
+          p_action: string
+          p_bill_amount?: number
+          p_date: string
+          p_id: string
+          p_request_id: string
+        }
+        Returns: {
+          account_id: string | null
+          action: string
+          bill_amount: number | null
+          contribution_id: string
+          created_at: string
+          date: string
+          id: string
+          transaction_ids: string[]
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "contribution_events"
           isOneToOne: true
           isSetofReturn: false
         }
@@ -1140,8 +1388,38 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      archive_category: {
+        Args: { p_category_id: string }
+        Returns: {
+          entity: Database["public"]["Enums"]["entity_type"]
+          id: string
+          is_archived: boolean
+          name: string
+          parent_id: string | null
+          sort_order: number
+          user_id: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "categories"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       archive_debt: { Args: { p_debt_id: string }; Returns: Json }
+      close_month: {
+        Args: {
+          p_expected_fingerprint: string
+          p_month: string
+          p_report_payload: Json
+        }
+        Returns: Json
+      }
       complete_onboarding: { Args: { p_data: Json }; Returns: Json }
+      copy_budget: {
+        Args: { p_from: string; p_replace?: boolean; p_to: string }
+        Returns: undefined
+      }
       create_account: {
         Args: {
           p_balance?: number
@@ -1224,6 +1502,37 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      create_shared_contribution: {
+        Args: {
+          p_amount: number
+          p_category_id: string
+          p_contributor: string
+          p_description: string
+          p_due_date: string
+          p_id: string
+          p_notice_date: string
+        }
+        Returns: {
+          amount: number
+          category_id: string
+          contributor: string
+          created_at: string
+          description: string
+          due_date: string
+          id: string
+          liability_account_id: string
+          notice_date: string
+          received_date: string | null
+          status: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "shared_contributions"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       create_snapshot: { Args: { p_date?: string }; Returns: Json }
       create_spa_invoice: {
         Args: {
@@ -1267,6 +1576,25 @@ export type Database = {
         Returns: {
           entity: Database["public"]["Enums"]["entity_type"]
           id: string
+          is_archived: boolean
+          name: string
+          parent_id: string | null
+          sort_order: number
+          user_id: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "categories"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      create_top_level_category: {
+        Args: { p_name: string }
+        Returns: {
+          entity: Database["public"]["Enums"]["entity_type"]
+          id: string
+          is_archived: boolean
           name: string
           parent_id: string | null
           sort_order: number
@@ -1286,23 +1614,9 @@ export type Database = {
           p_category: string
           p_date?: string
           p_description: string
-          p_group_id?: string
           p_type?: Database["public"]["Enums"]["transaction_type"]
         }
         Returns: Json
-      }
-      create_transaction_group: {
-        Args: {
-          p_entity?: Database["public"]["Enums"]["entity_type"]
-          p_name: string
-        }
-        Returns: Database["public"]["Tables"]["transaction_groups"]["Row"]
-        SetofOptions: {
-          from: "*"
-          to: "transaction_groups"
-          isOneToOne: true
-          isSetofReturn: false
-        }
       }
       create_transfer: {
         Args: {
@@ -1315,30 +1629,27 @@ export type Database = {
         Returns: Json
       }
       delete_category: { Args: { p_category_id: string }; Returns: undefined }
-      archive_transaction_group: {
-        Args: { p_group_id: string }
-        Returns: Database["public"]["Tables"]["transaction_groups"]["Row"]
-        SetofOptions: {
-          from: "*"
-          to: "transaction_groups"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
-      rename_transaction_group: {
-        Args: { p_group_id: string; p_name: string }
-        Returns: Database["public"]["Tables"]["transaction_groups"]["Row"]
-        SetofOptions: {
-          from: "*"
-          to: "transaction_groups"
-          isOneToOne: true
-          isSetofReturn: false
-        }
-      }
       get_f29_summary: {
         Args: { p_month: number; p_year: number }
         Returns: Json
       }
+      get_month_close: {
+        Args: { p_month: string; p_revision?: number }
+        Returns: Json
+      }
+      get_month_close_history: {
+        Args: { p_limit?: number }
+        Returns: {
+          closed_at: string
+          id: string
+          period: string
+          preflight: Json
+          revision: number
+          transaction_count: number
+          transaction_fingerprint: string
+        }[]
+      }
+      get_month_close_preflight: { Args: { p_month: string }; Returns: Json }
       get_monthly_buckets: {
         Args: {
           p_entity?: Database["public"]["Enums"]["entity_type"]
@@ -1346,6 +1657,7 @@ export type Database = {
         }
         Returns: Json
       }
+      get_monthly_budget: { Args: { p_month: string }; Returns: Json }
       get_reconciliation_status: {
         Args: { p_entity?: Database["public"]["Enums"]["entity_type"] }
         Returns: Json
@@ -1411,6 +1723,7 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      list_shared_contributions: { Args: never; Returns: Json }
       mark_f29_declared: {
         Args: {
           p_confirmation_number?: string
@@ -1473,6 +1786,10 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      month_transaction_fingerprint: {
+        Args: { p_period: string; p_user_id: string }
+        Returns: string
+      }
       pay_debt_installment: {
         Args: { p_date?: string; p_debt_id: string }
         Returns: Json
@@ -1509,6 +1826,10 @@ export type Database = {
         }
         Returns: Json
       }
+      remove_budget_target: {
+        Args: { p_category_id: string; p_month: string }
+        Returns: undefined
+      }
       rename_account: {
         Args: { p_account_id: string; p_new_name: string }
         Returns: {
@@ -1539,6 +1860,7 @@ export type Database = {
         Returns: {
           entity: Database["public"]["Enums"]["entity_type"]
           id: string
+          is_archived: boolean
           name: string
           parent_id: string | null
           sort_order: number
@@ -1547,6 +1869,41 @@ export type Database = {
         SetofOptions: {
           from: "*"
           to: "categories"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      set_budget_income: {
+        Args: { p_amount: number; p_month: string }
+        Returns: {
+          created_at: string
+          currency: string
+          id: string
+          month: string
+          planned_income: number
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "budget_plans"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      set_budget_target: {
+        Args: { p_amount: number; p_category_id: string; p_month: string }
+        Returns: {
+          amount: number
+          category_id: string
+          created_at: string
+          id: string
+          plan_id: string
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "budget_targets"
           isOneToOne: true
           isSetofReturn: false
         }

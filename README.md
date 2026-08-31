@@ -17,6 +17,11 @@ This is not a YNAB or Mint replacement. It is a self-hosted, code-first alternat
 
 Status: **Beta — building in public.** Used daily by the author to migrate 9 years of Excel history. Schema is stable; UI iterating.
 
+Shared expense advances require
+the `20260831000000_shared_contributions.sql` migration before enabling the new UI.
+See [shared contributions](docs/shared-contributions.md) for the accounting contract,
+CLI, validation evidence, and deployment gates.
+
 ---
 
 ## Demo

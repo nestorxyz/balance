@@ -41,14 +41,20 @@ Deno.serve(async (req) => {
 
     try {
       // Fetch all user data with service_role (bypasses RLS)
-      const [accounts, transactions, debts, categories, snapshots, recurring] = await Promise.all([
+      const [accounts, transactions, debts, categories, snapshots, recurring, contributions, contributionEvents] = await Promise.all([
         supabase.from('accounts').select('*').eq('user_id', userId),
         supabase.from('transactions').select('*').eq('user_id', userId).order('date', { ascending: false }),
         supabase.from('debts').select('*').eq('user_id', userId),
         supabase.from('categories').select('*').or(`user_id.eq.${userId},user_id.is.null`),
         supabase.from('snapshots').select('*').eq('user_id', userId),
         supabase.from('recurring_charges').select('*').eq('user_id', userId),
+        supabase.from('shared_contributions').select('*').eq('user_id', userId),
+        supabase.from('contribution_events').select('*').eq('user_id', userId),
       ])
+
+      for (const result of [accounts, transactions, debts, categories, snapshots, recurring, contributions, contributionEvents]) {
+        if (result.error) throw new Error(`Backup incomplete: ${result.error.message}`)
+      }
 
       const data = {
         exported_at: new Date().toISOString(),
@@ -60,6 +66,8 @@ Deno.serve(async (req) => {
           categories: categories.data ?? [],
           snapshots: snapshots.data ?? [],
           recurring_charges: recurring.data ?? [],
+          shared_contributions: contributions.data ?? [],
+          contribution_events: contributionEvents.data ?? [],
         },
       }
 

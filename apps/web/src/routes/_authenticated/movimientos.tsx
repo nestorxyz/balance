@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ReservedContributions } from '@/components/contributions/reserved-contributions'
 import { createFileRoute } from '@tanstack/react-router'
 import { useTransactions, type TransactionFilters } from '@/hooks/use-transactions'
 import { TransactionFiltersBar } from '@/components/transactions/transaction-filters'
@@ -41,6 +42,7 @@ function MovimientosPage() {
 
   return (
     <div className="space-y-4">
+      <ReservedContributions />
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold">Movimientos</h1>
         <SyncButton />
