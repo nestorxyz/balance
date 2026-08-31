@@ -47,3 +47,12 @@ Apply migration before publishing web/CLI/backup function. Local backup validati
 not evidence that a production cron schedule exists or is working. External
 scheduled notifications, partial receipts, and post-settlement corrections are
 not implemented; see `docs/shared-contributions.md` for the supported boundary.
+
+Production backend release (2026-08-31, explicitly authorized):
+- Applied only `20260831000000_shared_contributions.sql`; subsequent dry-run
+  reports the remote database up to date.
+- Redeployed `daily-backup`, preserving its existing CRON_SECRET gate and
+  verify_jwt=false setting. No schedule or credentials changed.
+- Production invocation smoke test was blocked by the execution safety gate;
+  no production backup invocation or scheduled-run verification is claimed.
+- No real financial movements were created. Frontend delivery is tracked in PR #9.
