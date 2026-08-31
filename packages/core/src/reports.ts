@@ -104,9 +104,9 @@ export function monthBounds(month: string): { start: string; end: string } {
 export function transactionAccountEffect(transaction: ReportTransaction): number {
   switch (transaction.type) {
     case 'income':
+    case 'refund':
       return transaction.amount
     case 'expense':
-    case 'refund':
       return -transaction.amount
     case 'adjustment':
     case 'transfer':
@@ -134,13 +134,13 @@ function journalLinesForTransaction(
   const category = categoryName(transaction.category, categoryMap)
   const amount = Math.abs(transaction.amount)
 
-  if (transaction.type === 'income') {
+  if (transaction.type === 'income' || transaction.type === 'refund') {
     return [
       { account, debit: amount, credit: 0 },
       { account: category, debit: 0, credit: amount },
     ]
   }
-  if (transaction.type === 'expense' || transaction.type === 'refund') {
+  if (transaction.type === 'expense') {
     return [
       { account: category, debit: amount, credit: 0 },
       { account, debit: 0, credit: amount },
