@@ -86,7 +86,16 @@ bal budget income <monto> --month YYYY-MM
 bal budget set <categoría|id> <monto> --month YYYY-MM
 bal budget remove <categoría|id> --month YYYY-MM
 bal budget copy --from YYYY-MM --to YYYY-MM [--replace]
+bal budget assign <transaction-id> --month YYYY-MM --json
+bal budget exclude <transaction-id> --json
+bal budget reset <transaction-id> --json
+bal budget assignments [--month YYYY-MM] [--accounting-month YYYY-MM] [--all] --json
 ```
+
+La fecha del movimiento siempre sigue siendo su fecha contable. `assign` y `exclude`
+solo cambian cómo participa en el presupuesto; `reset` vuelve a derivar el mes desde
+la fecha contable. `assignments` muestra excepciones explícitas por defecto y con
+`--all` incluye también las asignaciones derivadas automáticamente.
 
 Efecto en el cuadre:
 - `expense`, `income`, `refund`, `adjustment` → afectan `accumulated`.
