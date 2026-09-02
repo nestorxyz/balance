@@ -30,8 +30,22 @@ export interface MonthlyBudget {
   planned_available: number
   actual_income: number
   actual_spending: number
+  actual_commitments: number
   actual_available: number
   categories: BudgetCategory[]
+}
+
+export interface BudgetAssignment {
+  transaction_id: string
+  accounting_date: string
+  description: string
+  type: string
+  amount: number
+  account_id: string
+  category: string | null
+  budget_month: string | null
+  is_excluded: boolean
+  is_explicit: boolean
 }
 
 async function rpc<T>(client: Client, name: string, args: Record<string, unknown>): Promise<T> {
@@ -50,3 +64,19 @@ export const removeBudgetTarget = (client: Client, month: string, categoryId: st
   rpc(client, 'remove_budget_target', { p_month: `${month}-01`, p_category_id: categoryId })
 export const copyBudget = (client: Client, from: string, to: string, replace = false) =>
   rpc(client, 'copy_budget', { p_from: `${from}-01`, p_to: `${to}-01`, p_replace: replace })
+export const assignTransactionToBudget = (client: Client, transactionId: string, month: string) =>
+  rpc<BudgetAssignment>(client, 'set_transaction_budget_assignment', {
+    p_transaction_id: transactionId, p_month: `${month}-01`, p_excluded: false,
+  })
+export const excludeTransactionFromBudget = (client: Client, transactionId: string) =>
+  rpc<BudgetAssignment>(client, 'set_transaction_budget_assignment', {
+    p_transaction_id: transactionId, p_month: null, p_excluded: true,
+  })
+export const resetTransactionBudgetAssignment = (client: Client, transactionId: string) =>
+  rpc<BudgetAssignment>(client, 'reset_transaction_budget_assignment', { p_transaction_id: transactionId })
+export const getBudgetAssignments = (client: Client, options: { month?: string; accountingMonth?: string; explicitOnly?: boolean } = {}) =>
+  rpc<BudgetAssignment[]>(client, 'get_budget_assignments', {
+    p_month: options.month ? `${options.month}-01` : null,
+    p_accounting_month: options.accountingMonth ? `${options.accountingMonth}-01` : null,
+    p_explicit_only: options.explicitOnly ?? false,
+  })

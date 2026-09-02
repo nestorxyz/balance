@@ -7,6 +7,7 @@ import { useCategories } from '@/hooks/use-categories'
 import { supabase } from '@/lib/supabase'
 import { useQueryClient } from '@tanstack/react-query'
 import { formatMoney } from '@/lib/format'
+import { BudgetAssignmentPanel } from '@/components/budget/budget-assignment-panel'
 
 export const Route = createFileRoute('/_authenticated/presupuesto')({ component: BudgetPage })
 const nowMonth = () => new Date().toISOString().slice(0, 7)
@@ -29,8 +30,8 @@ function BudgetPage() {
   return <div className="space-y-6">
     <ReservedContributions />
     <div className="flex items-center justify-between"><h1 className="text-xl font-semibold">Presupuesto</h1><div className="flex items-center gap-2"><button onClick={()=>setMonth(shiftMonth(month,-1))}>‹</button><input type="month" value={month} onChange={e=>setMonth(e.target.value)}/><button onClick={()=>setMonth(shiftMonth(month,1))}>›</button></div></div>
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-      <Summary label="Disponible real" value={budget.data?.actual_available}/><Summary label="Disponible planificado" value={budget.data?.planned_available}/><Summary label="Ingreso real" value={budget.data?.actual_income}/><Summary label="Asignado" value={budget.data?.total_allocated}/>
+    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      <Summary label="Disponible real" value={budget.data?.actual_available}/><Summary label="Disponible planificado" value={budget.data?.planned_available}/><Summary label="Ingreso real" value={budget.data?.actual_income}/><Summary label="Compromisos de caja" value={budget.data?.actual_commitments}/><Summary label="Asignado" value={budget.data?.total_allocated}/>
     </div>
     <form className="flex gap-2" onSubmit={e=>{e.preventDefault(); const v=money(income); if(v>=0) mutations.income.mutate(v)}}><input aria-label="Ingreso planificado" className="rounded border px-3 py-2" placeholder={String(budget.data?.planned_income??0)} value={income} onChange={e=>setIncome(e.target.value)}/><button className="rounded bg-primary px-3 text-primary-foreground">Guardar ingreso</button></form>
     <div className="grid gap-3 md:grid-cols-2">{budget.data?.categories.map(row=><div key={row.category_id} className="rounded-lg border p-4 space-y-3">
@@ -53,6 +54,7 @@ function BudgetPage() {
       <select value={childParent} onChange={e=>setChildParent(e.target.value)}><option value="">Categoría padre…</option>{categories.filter(c=>c.parent_id===null).map(c=><option key={c.id} value={c.id}>{c.name}</option>)}</select>
       <input placeholder="Nueva subcategoría" value={childName} onChange={e=>setChildName(e.target.value)}/><button>Crear subcategoría</button>
     </form>
+    <BudgetAssignmentPanel key={month} initialAccountingMonth={shiftMonth(month,-1)} />
   </div>
 }
 function Summary({label,value}:{label:string;value?:number}) { return <div className="rounded-lg border p-4"><div className="text-sm text-muted-foreground">{label}</div><div className="text-xl font-semibold">{formatMoney(value??0)}</div></div> }

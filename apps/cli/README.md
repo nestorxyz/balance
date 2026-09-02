@@ -117,6 +117,10 @@ an explicit account/date, and a stable `--request-id` for safe retries.
 | `bal budget set <category> <amount> --month YYYY-MM` | Set an exact category target. |
 | `bal budget remove <category> --month YYYY-MM` | Remove a category target. |
 | `bal budget copy --from YYYY-MM --to YYYY-MM [--replace]` | Copy a month, protecting populated destinations by default. |
+| `bal budget assign <transaction-id> --month YYYY-MM [--json]` | Assign a transaction to another budget month without changing its accounting date. |
+| `bal budget exclude <transaction-id> [--json]` | Exclude a transaction from budget calculations. |
+| `bal budget reset <transaction-id> [--json]` | Return a transaction to its accounting-date budget month. |
+| `bal budget assignments [--month YYYY-MM] [--accounting-month YYYY-MM] [--all] [--json]` | List explicit assignments, or all effective assignments with `--all`. |
 
 ### Recurring charges
 

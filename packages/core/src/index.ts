@@ -51,8 +51,11 @@ export type {
 export { parseMoney, moneyToDecimal, formatMoney, assertMinorUnits, roundMoney, usdToClp, parseUsdAmount } from './money'
 export type { ParseMoneyOptions } from './money'
 export { getCategories, createSubcategory, createTopLevelCategory, renameCategory, archiveCategory, deleteCategory } from './categories'
-export { getMonthlyBudget, setBudgetIncome, setBudgetTarget, removeBudgetTarget, copyBudget } from './budgets'
-export type { MonthlyBudget, BudgetCategory } from './budgets'
+export {
+  getMonthlyBudget, setBudgetIncome, setBudgetTarget, removeBudgetTarget, copyBudget,
+  assignTransactionToBudget, excludeTransactionFromBudget, resetTransactionBudgetAssignment, getBudgetAssignments,
+} from './budgets'
+export type { MonthlyBudget, BudgetCategory, BudgetAssignment } from './budgets'
 export { createInstallmentPurchase, payDebtInstallment, payOffDebt, getActiveDebts, archiveDebt } from './debts'
 export { createTransfer, createInterEntityTransfer, receivePayment } from './transfers'
 export { createSnapshot, getSnapshotHistory } from './snapshots'
